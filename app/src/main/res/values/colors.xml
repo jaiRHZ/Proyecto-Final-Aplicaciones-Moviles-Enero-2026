@@ -1,5 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+    <!-- Colores primarios Happy Box -->
+    <color name="happybox_primary">#E8357A</color>
+    <color name="happybox_primary_dark">#C0255E</color>
+    <color name="happybox_primary_light">#F472B6</color>
+
+    <!-- Colores secundarios -->
+    <color name="happybox_secondary">#FDE8F1</color>
+    <color name="happybox_secondary_dark">#F5C4D8</color>
+
+    <!-- Colores de acento -->
+    <color name="happybox_accent">#A02050</color>
+    <color name="happybox_accent_light">#FDE8F1</color>
+
+    <!-- Fondos -->
+    <color name="background_screen">#FFFFFF</color>
+    <color name="background_card">#FFFFFF</color>
+    <color name="background_input">#F9F9F9</color>
+    <color name="background_chip">#F5F5F5</color>
+    <color name="background_product_image">#FDE8F1</color>
+
+    <!-- Textos -->
+    <color name="text_primary">#1A1A1A</color>
+    <color name="text_secondary">#6B6B6B</color>
+    <color name="text_hint">#AAAAAA</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_price">#E8357A</color>
+    <color name="text_badge">#A02050</color>
+
+    <!-- Bordes -->
+    <color name="border_default">#E0E0E0</color>
+    <color name="border_input">#D0D0D0</color>
+
+    <!-- Toolbar -->
+    <color name="toolbar_background">#E8357A</color>
+    <color name="toolbar_title">#FFFFFF</color>
+    <color name="toolbar_icon">#FFFFFF</color>
+
+    <!-- Chip activo -->
+    <color name="chip_active_background">#E8357A</color>
+    <color name="chip_active_text">#FFFFFF</color>
+    <color name="chip_inactive_background">#F5F5F5</color>
+    <color name="chip_inactive_text">#6B6B6B</color>
+
+    <!-- Bottom Navigation -->
+    <color name="nav_selected">#E8357A</color>
+    <color name="nav_unselected">#AAAAAA</color>
+
+    <!-- Estado disponible -->
+    <color name="badge_background">#FDE8F1</color>
+    <color name="badge_text">#A02050</color>
+
+    <!-- Botón outline -->
+    <color name="btn_outline_border">#E8357A</color>
+    <color name="btn_outline_text">#E8357A</color>
+
+    <!-- Danger / cerrar sesión -->
+    <color name="danger">#E04060</color>
+
+    <!-- Colores del sistema (requeridos por Material) -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
 </resources>
