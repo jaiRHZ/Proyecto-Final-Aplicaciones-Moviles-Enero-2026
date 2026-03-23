@@ -66,10 +66,20 @@
     <!-- ── Pantalla 7: Carrito ── -->
     <string name="titleCarrito">Mi carrito</string>
     <string name="labelTotal">Total</string>
+    <string name="labelSubtotal">Subtotal</string>
+    <string name="labelProductos">productos</string>
+    <string name="labelCarritoVacio">Tu carrito está vacío</string>
+    <string name="labelCarritoVacioSub">Agrega productos desde el catálogo</string>
     <string name="btnConfirmarPedido">Confirmar pedido</string>
-    <string name="toastCarritoVacio">Tu carrito está vacío</string>
-    <string name="toastPedidoConfirmado">¡Pedido confirmado!</string>
+    <string name="btnSeguirComprando">Seguir comprando</string>
     <string name="btnEliminar">Eliminar</string>
+    <string name="toastCarritoVacio">Tu carrito está vacío</string>
+    <string name="toastPedidoConfirmado">¡Pedido confirmado! Nos pondremos en contacto contigo.</string>
+    <string name="toastProductoEliminado">Producto eliminado del carrito</string>
+    <string name="dialogEliminarTitulo">¿Eliminar producto?</string>
+    <string name="dialogEliminarMensaje">¿Seguro que quieres quitar este producto del carrito?</string>
+    <string name="formatoPrecioCarrito">$%.2f MXN</string>
+    <string name="formatoCantidadItems">%d artículo(s) en tu carrito</string>
 
     <!-- ── Pantalla 8: Perfil ── -->
     <string name="titlePerfil">Mi perfil</string>
@@ -92,7 +102,5 @@
     <string name="btnCancelar">Cancelar</string>
     <string name="btnAceptar">Aceptar</string>
     <string name="btnVolver">Volver</string>
-
-    <string name="formatoPrecio">$%.2f</string>
 
 </resources>

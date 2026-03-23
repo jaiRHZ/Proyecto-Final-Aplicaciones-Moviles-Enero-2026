@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_screen">
+
+    <!-- ── Toolbar ── -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarCarrito"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
+        app:titleTextColor="@color/toolbar_title"
+        app:title="@string/titleCarrito"
+        style="@style/Widget.HappyBox.Toolbar"/>
+
+    <!-- ══════════════════════════════════════════════════════
+         ESTADO VACÍO
+         Se muestra cuando el carrito no tiene productos.
+         Ocupa el espacio central con ícono + textos + botón.
+    ══════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutCarritoVacio"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp"
+        android:visibility="gone">
+
+        <!-- Ícono grande de carrito vacío -->
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/ic_cart"
+            android:contentDescription="@null"
+            app:tint="@color/carrito_vacio_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/labelCarritoVacio"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/labelCarritoVacioSub"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:gravity="center"/>
+
+        <!-- Botón para ir al catálogo -->
+        <Button
+            android:id="@+id/btnSeguirComprando"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/btnSeguirComprando"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            style="@style/Widget.HappyBox.Button.Primary"/>
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════════
+         ESTADO CON PRODUCTOS
+         ListView que ocupa el espacio disponible.
+    ══════════════════════════════════════════════════════ -->
+    <ListView
+        android:id="@+id/listViewCarrito"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"
+        android:clipToPadding="false"
+        android:visibility="gone"/>
+
+    <!-- ── Sección de resumen y total ── -->
+    <LinearLayout
+        android:id="@+id/layoutResumenCarrito"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_resumen_carrito"
+        android:padding="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone">
+
+        <!-- Cantidad de artículos -->
+        <TextView
+            android:id="@+id/tvCantidadItems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:layout_marginBottom="8dp"
+            android:text="0 artículo(s) en tu carrito"/>
+
+        <!-- Fila: Subtotal -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/Widget.HappyBox.ResumenLabel"
+                android:text="@string/labelSubtotal"/>
+
+            <TextView
+                android:id="@+id/tvSubtotalCarrito"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.HappyBox.ResumenLabel"
+                android:text="$0.00 MXN"/>
+
+        </LinearLayout>
+
+        <!-- Divisor -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider_color"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Fila: Total -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/labelTotal"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvTotalCarrito"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.HappyBox.TotalAmount"
+                android:text="$0.00 MXN"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ── Botón Confirmar pedido ── -->
+    <Button
+        android:id="@+id/btnConfirmarPedido"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/btnConfirmarPedido"
+        style="@style/Widget.HappyBox.Button.Primary"
+        android:visibility="gone"/>
+
+    <!-- ── Bottom Navigation ── -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavCarrito"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_card"
+        app:itemIconTint="@color/nav_selector"
+        app:itemTextColor="@color/nav_selector"
+        app:menu="@menu/bottom_nav_menu"
+        style="@style/Widget.HappyBox.BottomNavigation"/>
+
+</LinearLayout>

@@ -52,6 +52,13 @@ class ProductosActivity : AppCompatActivity() {
         configurarBottomNav()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Actualizar badge del carrito en toolbar si lo implementas
+        val cantidad = CarritoManager.contarArticulos()
+        // Puedes usar BadgeDrawable de Material si quieres el contador visual
+    }
+
     // ── Inicializar referencias a las vistas ─────────────────
     private fun inicializarVistas() {
         toolbar           = findViewById(R.id.toolbarProductos)

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <!-- Colores primarios Happy Box -->
     <color name="happybox_primary">#E8357A</color>
@@ -59,8 +58,16 @@
     <!-- Danger / cerrar sesión -->
     <color name="danger">#E04060</color>
 
+    <!-- Carrito: estado vacío y resumen -->
+    <color name="carrito_vacio_icon">#F5C4D8</color>
+    <color name="divider_color">#F0F0F0</color>
+    <color name="text_total_label">#6B6B6B</color>
+    <color name="text_total_amount">#E8357A</color>
+    <color name="background_resumen">#FDF5F8</color>
+    <color name="qty_btn_background">#FDE8F1</color>
+    <color name="qty_btn_text">#E8357A</color>
+
     <!-- Colores del sistema (requeridos por Material) -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
 </resources>

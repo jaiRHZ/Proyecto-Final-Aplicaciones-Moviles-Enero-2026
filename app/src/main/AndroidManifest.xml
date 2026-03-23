@@ -19,10 +19,15 @@
             android:name=".ProductosActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".CarritoActivity"
+            android:label="@string/titleCarrito"
+            android:theme="@style/Theme.HappyBox.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProductosActivity"
             android:exported="false" />
 
         <activity
