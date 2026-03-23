@@ -54,13 +54,13 @@ class CarritoAdapter(
         holder.tvNombre.text = item.producto.nombre
 
         holder.tvPrecioUnit.text = context.getString(
-            R.string.formatoPrecio, item.producto.precio
+            R.string.formatoPrecioCarrito, item.producto.precio
         )
 
         holder.tvCantidad.text = item.cantidad.toString()
 
         holder.tvSubtotal.text = context.getString(
-            R.string.formatoPrecio, item.subtotal
+            R.string.formatoPrecioCarrito, item.subtotal
         )
 
         // Imagen: usa el resource del producto o placeholder
@@ -77,7 +77,7 @@ class CarritoAdapter(
             // sin necesidad de redibujar toda la lista
             holder.tvCantidad.text = item.cantidad.toString()
             holder.tvSubtotal.text = context.getString(
-                R.string.formatoPrecio, item.subtotal
+                R.string.formatoPrecioCarrito, item.subtotal
             )
         }
 

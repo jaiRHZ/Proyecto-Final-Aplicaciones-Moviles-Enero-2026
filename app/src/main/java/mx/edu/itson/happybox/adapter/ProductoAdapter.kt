@@ -43,7 +43,7 @@ class ProductoAdapter(
 
         // Asignar valores a las vistas
         holder.tvNombre.text = producto.nombre
-        holder.tvPrecio.text = context.getString(R.string.formatoPrecio, producto.precio)
+        holder.tvPrecio.text = context.getString(R.string.formatoPrecioCarrito, producto.precio)
 
         // Mostrar o esconder el badge según disponibilidad
         if (producto.disponible) {

@@ -68,6 +68,22 @@
 
     </HorizontalScrollView>
 
+    <EditText
+        android:id="@+id/etBuscar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_input_rounded"
+        android:backgroundTint="@color/happybox_secondary"
+        android:hint="@string/hintBuscar"
+        android:textColorHint="#9E9E9E"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="12dp"
+        android:drawableTint="#9E9E9E"
+        android:inputType="text"
+        android:layout_marginBottom="24dp"
+        android:elevation="0dp"/>
     <!-- ── ListView de productos (ocupa el espacio disponible) ── -->
     <ListView
         android:id="@+id/listViewProductos"

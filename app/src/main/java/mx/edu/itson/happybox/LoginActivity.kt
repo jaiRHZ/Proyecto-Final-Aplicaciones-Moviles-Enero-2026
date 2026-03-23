@@ -25,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
         btnEntrar      = findViewById(R.id.btnEntrar)
         btnRegistrarse = findViewById(R.id.btnRegistrarse)
         // El layout activity_login tiene tvSinCuenta según los strings, reviso el layout
-        tvSinCuenta = findViewById(R.id.tvSinCuenta)
+        tvSinCuenta = findViewById(R.id.tvNoTieneCuenta)
 
         btnEntrar.setOnClickListener {
             val correo     = etCorreo.text.toString().trim()

@@ -11,6 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import mx.edu.itson.happybox.adapter.ProductoAdapter
+import mx.edu.itson.happybox.model.CarritoManager
 import mx.edu.itson.happybox.model.Producto
 
 class ProductosActivity : AppCompatActivity() {
@@ -26,23 +27,20 @@ class ProductosActivity : AppCompatActivity() {
     private lateinit var bottomNav: BottomNavigationView
 
     // ── Datos ────────────────────────────────────────────────
-    // Lista original sin filtrar (se mantiene intacta)
     private var listaOriginal: List<Producto> = emptyList()
-    // Lista que se muestra actualmente (puede estar ordenada)
     private var listaFiltrada: MutableList<Producto> = mutableListOf()
-    // Adaptador del ListView
     private lateinit var adapter: ProductoAdapter
 
-    // Categoría que viene del Intent (pantalla 4)
-    private var categoria: String = ""
+    private var categoria: String? = null
+    private var query: String? = null
 
-    // ────────────────────────────────────────────────────────
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_productos)
 
-        // Leer la categoría enviada desde HomeActivity
-        categoria = intent.getStringExtra("categoria") ?: "Peluches"
+        // Leer datos del Intent
+        categoria = intent.getStringExtra("categoria")
+        query     = intent.getStringExtra("query")
 
         inicializarVistas()
         configurarToolbar()
@@ -52,14 +50,6 @@ class ProductosActivity : AppCompatActivity() {
         configurarBottomNav()
     }
 
-    override fun onResume() {
-        super.onResume()
-        // Actualizar badge del carrito en toolbar si lo implementas
-        val cantidad = CarritoManager.contarArticulos()
-        // Puedes usar BadgeDrawable de Material si quieres el contador visual
-    }
-
-    // ── Inicializar referencias a las vistas ─────────────────
     private fun inicializarVistas() {
         toolbar           = findViewById(R.id.toolbarProductos)
         chipGroup         = findViewById(R.id.chipGroupFiltros)
@@ -71,42 +61,53 @@ class ProductosActivity : AppCompatActivity() {
         bottomNav         = findViewById(R.id.bottomNavProductos)
     }
 
-    // ── Toolbar con flecha de regreso ────────────────────────
     private fun configurarToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
-            // Mostrar flecha de regreso
             setDisplayHomeAsUpEnabled(true)
-            // Título dinámico según la categoría
-            title = categoria
+            // Si hay búsqueda, mostrar "Resultados", si no, la categoría
+            title = when {
+                query != null -> "Resultados: $query"
+                categoria != null -> categoria
+                else -> "Productos"
+            }
         }
-        // Volver a la pantalla anterior al pulsar la flecha
         toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
     }
 
-    // ── Datos de ejemplo (en un proyecto real vendrían de una BD o API) ──
     private fun cargarProductos() {
-        // Aquí construimos la lista de productos de la categoría recibida.
-        // En una versión más avanzada, esto vendría de una base de datos SQLite
-        // o de una llamada a una API REST.
-        listaOriginal = obtenerProductosPorCategoria(categoria)
+        // 1. Obtener la base de datos (por ahora simulada con todas las categorías)
+        val todosLosProductos = obtenerTodosLosProductos()
+
+        // 2. Aplicar filtros iniciales según lo que se recibió
+        listaOriginal = when {
+            query != null -> {
+                // Filtro por búsqueda de texto
+                todosLosProductos.filter { 
+                    it.nombre.contains(query!!, ignoreCase = true) || 
+                    it.descripcion.contains(query!!, ignoreCase = true)
+                }
+            }
+            categoria != null -> {
+                // Filtro por categoría
+                todosLosProductos.filter { it.categoria == categoria }
+            }
+            else -> todosLosProductos
+        }
 
         if (listaOriginal.isEmpty()) {
             Toast.makeText(this, getString(R.string.toastListaVacia), Toast.LENGTH_SHORT).show()
         }
 
-        // La lista filtrada empieza igual que la original
         listaFiltrada = listaOriginal.toMutableList()
     }
 
-    // ── Adaptador y eventos del ListView ─────────────────────
     private fun configurarListView() {
         adapter = ProductoAdapter(this, listaFiltrada)
         listViewProductos.adapter = adapter
 
-        // Al tocar un producto, ir al detalle
         listViewProductos.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
                 val productoSeleccionado = listaFiltrada[position]
@@ -114,50 +115,39 @@ class ProductosActivity : AppCompatActivity() {
             }
     }
 
-    // ── Chips de filtrado / ordenamiento ─────────────────────
     private fun configurarChips() {
-        // Chip "Todos" — restaura el orden original
         chipTodos.setOnClickListener {
             desmarcarTodosLosChips()
             chipTodos.isChecked = true
             listaFiltrada.clear()
             listaFiltrada.addAll(listaOriginal)
             adapter.notifyDataSetChanged()
-            Toast.makeText(this, "Mostrando todos los productos", Toast.LENGTH_SHORT).show()
         }
 
-        // Chip "Precio ↑" — ordena de menor a mayor precio
         chipPrecioAsc.setOnClickListener {
             desmarcarTodosLosChips()
             chipPrecioAsc.isChecked = true
             listaFiltrada.sortBy { it.precio }
             adapter.notifyDataSetChanged()
-            Toast.makeText(this, "Ordenado: precio menor a mayor", Toast.LENGTH_SHORT).show()
         }
 
-        // Chip "Precio ↓" — ordena de mayor a menor precio
         chipPrecioDesc.setOnClickListener {
             desmarcarTodosLosChips()
             chipPrecioDesc.isChecked = true
             listaFiltrada.sortByDescending { it.precio }
             adapter.notifyDataSetChanged()
-            Toast.makeText(this, "Ordenado: precio mayor a menor", Toast.LENGTH_SHORT).show()
         }
 
-        // Chip "Nombre" — ordena alfabéticamente
         chipNombre.setOnClickListener {
             desmarcarTodosLosChips()
             chipNombre.isChecked = true
             listaFiltrada.sortBy { it.nombre }
             adapter.notifyDataSetChanged()
-            Toast.makeText(this, "Ordenado: A → Z", Toast.LENGTH_SHORT).show()
         }
 
-        // El chip "Todos" empieza marcado
         chipTodos.isChecked = true
     }
 
-    // Quita la marca visual de todos los chips antes de activar uno nuevo
     private fun desmarcarTodosLosChips() {
         chipTodos.isChecked      = false
         chipPrecioAsc.isChecked  = false
@@ -165,29 +155,22 @@ class ProductosActivity : AppCompatActivity() {
         chipNombre.isChecked     = false
     }
 
-    // ── Bottom Navigation ─────────────────────────────────────
     private fun configurarBottomNav() {
-        // Marcar el ítem activo (Buscar, porque estamos viendo productos)
         bottomNav.selectedItemId = R.id.navBuscar
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navInicio -> {
-                    // Volver al Home
-                    //startActivity(Intent(this, HomeActivity::class.java))
                     finish()
                     true
                 }
-                R.id.navBuscar -> {
-                    // Ya estamos aquí, no hacemos nada
-                    true
-                }
+                R.id.navBuscar -> true
                 R.id.navCarrito -> {
-                    //startActivity(Intent(this, CarritoActivity::class.java))
+                    startActivity(Intent(this, CarritoActivity::class.java))
                     true
                 }
                 R.id.navPerfil -> {
-                    //startActivity(Intent(this, PerfilActivity::class.java))
+                    startActivity(Intent(this, PerfilActivity::class.java))
                     true
                 }
                 else -> false
@@ -195,22 +178,27 @@ class ProductosActivity : AppCompatActivity() {
         }
     }
 
-    // ── Navegación al detalle ─────────────────────────────────
     private fun irADetalle(producto: Producto) {
-//        val intent = Intent(this, DetalleProductoActivity::class.java).apply {
-//            // Enviamos los datos del producto al detalle
-//            putExtra("productoId",          producto.id)
-//            putExtra("productoNombre",      producto.nombre)
-//            putExtra("productoPrecio",      producto.precio)
-//            putExtra("productoDescripcion", producto.descripcion)
-//            putExtra("productoImagenRes",   producto.imagenResId)
-//            putExtra("productoDisponible",  producto.disponible)
-//        }
+        val intent = Intent(this, DetailActivity::class.java).apply {
+            putExtra("productoId",          producto.id)
+            putExtra("productoNombre",      producto.nombre)
+            putExtra("productoPrecio",      producto.precio)
+            putExtra("productoDescription", producto.descripcion)
+            putExtra("productoImagenRes",   producto.imagenResId)
+        }
         startActivity(intent)
     }
 
-    // ── Datos de ejemplo por categoría ───────────────────────
-    // Sustituye esto con tu base de datos o API cuando avances en el proyecto
+    private fun obtenerTodosLosProductos(): List<Producto> {
+        val categorias = listOf("Peluches", "Globos", "Tazas", "Detalles", "Regalos")
+        val listaCompleta = mutableListOf<Producto>()
+        
+        categorias.forEach { cat ->
+            listaCompleta.addAll(obtenerProductosPorCategoria(cat))
+        }
+        return listaCompleta
+    }
+
     private fun obtenerProductosPorCategoria(cat: String): List<Producto> {
         return when (cat) {
             "Peluches" -> listOf(

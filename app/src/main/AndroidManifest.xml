@@ -24,10 +24,21 @@
             android:theme="@style/Theme.HappyBox.NoActionBar"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".PerfilActivity"
+            android:label="@string/titlePerfil"
+            android:theme="@style/Theme.HappyBox.NoActionBar"
             android:exported="false" />
         <activity
-            android:name=".ProductosActivity"
+            android:name=".MisPedidosActivity"
+            android:label="@string/optionMisPedidos"
+            android:theme="@style/Theme.HappyBox.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".DetailActivity"
+            android:theme="@style/Theme.HappyBox.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
             android:exported="false" />
 
         <activity
