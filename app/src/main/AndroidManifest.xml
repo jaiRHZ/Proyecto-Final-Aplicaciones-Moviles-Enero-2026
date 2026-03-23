@@ -11,23 +11,41 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HappyBox">
+
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProductosActivity"
+            android:exported="false" />
         <activity
             android:name=".CarritoActivity"
             android:label="@string/titleCarrito"
             android:theme="@style/Theme.HappyBox.NoActionBar"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".PerfilActivity"
+            android:label="@string/titlePerfil"
+            android:theme="@style/Theme.HappyBox.NoActionBar"
             android:exported="false" />
         <activity
-            android:name=".ProductosActivity"
+            android:name=".MisPedidosActivity"
+            android:label="@string/optionMisPedidos"
+            android:theme="@style/Theme.HappyBox.NoActionBar"
             android:exported="false" />
+        <activity
+            android:name=".DetailActivity"
+            android:theme="@style/Theme.HappyBox.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
