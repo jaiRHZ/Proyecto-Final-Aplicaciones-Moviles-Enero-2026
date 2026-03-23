@@ -13,6 +13,8 @@
         android:theme="@style/Theme.HappyBox">
         <activity
             android:name=".CarritoActivity"
+            android:label="@string/titleCarrito"
+            android:theme="@style/Theme.HappyBox.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
