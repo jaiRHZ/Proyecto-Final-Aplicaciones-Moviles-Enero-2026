@@ -14,7 +14,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var etContrasena: TextInputEditText
     private lateinit var btnEntrar: Button
     private lateinit var btnRegistrarse: com.google.android.material.button.MaterialButton
-    private lateinit var tvIniciarSesion: TextView
+    private lateinit var tvSinCuenta: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,8 @@ class LoginActivity : AppCompatActivity() {
         etContrasena  = findViewById(R.id.etContrasena)
         btnEntrar      = findViewById(R.id.btnEntrar)
         btnRegistrarse = findViewById(R.id.btnRegistrarse)
-        tvIniciarSesion = findViewById(R.id.tvIniciarSesion)
+        // El layout activity_login tiene tvSinCuenta según los strings, reviso el layout
+        tvSinCuenta = findViewById(R.id.tvSinCuenta)
 
         btnEntrar.setOnClickListener {
             val correo     = etCorreo.text.toString().trim()
@@ -40,15 +41,19 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Simulación de login exitoso
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish() // Cerramos login para que no regrese al presionar atrás
         }
 
         btnRegistrarse.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
 
-        tvIniciarSesion.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+        tvSinCuenta.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
     }
