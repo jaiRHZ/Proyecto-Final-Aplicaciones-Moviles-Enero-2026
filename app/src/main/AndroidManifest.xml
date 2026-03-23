@@ -12,7 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HappyBox">
         <activity
+            android:name=".CarritoActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProductosActivity"
             android:exported="false" />
         <activity
