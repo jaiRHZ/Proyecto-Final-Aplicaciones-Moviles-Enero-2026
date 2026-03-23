@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -17,7 +18,7 @@
         android:scaleType="centerCrop"
         android:background="@drawable/bg_imagen_producto"
         android:padding="6dp"
-        android:contentDescription="@string/labelDescripcion"/>
+        android:contentDescription="@string/labelDescripcion" />
 
     <!-- Información: nombre, badge y precio -->
     <LinearLayout
@@ -38,7 +39,7 @@
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="Nombre del producto"/>
+            android:text="Nombre del producto" />
 
         <!-- Badge de disponibilidad -->
         <TextView
@@ -48,7 +49,7 @@
             android:layout_marginTop="3dp"
             android:layout_marginBottom="3dp"
             style="@style/Widget.HappyBox.Badge"
-            android:text="@string/badgeDisponible"/>
+            android:text="@string/badgeDisponible" />
 
         <!-- Precio -->
         <TextView
@@ -56,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Widget.HappyBox.PriceText"
-            android:text="$0.00"/>
+            android:text="$0.00" />
 
     </LinearLayout>
 
@@ -65,7 +66,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/ic_arrow_right"
-        android:tint="@color/text_hint"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null"
+        app:tint="@color/text_hint" />
 
 </LinearLayout>

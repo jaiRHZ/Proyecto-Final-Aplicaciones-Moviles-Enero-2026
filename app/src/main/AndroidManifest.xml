@@ -16,7 +16,7 @@
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:name=".activity_productos"
+            android:name=".ProductosActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
