@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HappyBox">
-
+        <activity
+            android:name=".EditarNombreActivity"
+            android:exported="false" />
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
@@ -20,32 +22,32 @@
             android:exported="false" />
         <activity
             android:name=".CarritoActivity"
+            android:exported="false"
             android:label="@string/titleCarrito"
-            android:theme="@style/Theme.HappyBox.NoActionBar"
-            android:exported="false" />
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
         <activity
             android:name=".PerfilActivity"
+            android:exported="false"
             android:label="@string/titlePerfil"
-            android:theme="@style/Theme.HappyBox.NoActionBar"
-            android:exported="false" />
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
         <activity
             android:name=".MisPedidosActivity"
+            android:exported="false"
             android:label="@string/optionMisPedidos"
-            android:theme="@style/Theme.HappyBox.NoActionBar"
-            android:exported="false" />
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
         <activity
             android:name=".DetailActivity"
-            android:theme="@style/Theme.HappyBox.NoActionBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
