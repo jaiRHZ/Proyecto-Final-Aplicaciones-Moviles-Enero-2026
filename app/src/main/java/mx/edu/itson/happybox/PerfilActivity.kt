@@ -1,13 +1,17 @@
+// app/src/main/java/mx/edu/itson/happybox/PerfilActivity.kt
 package mx.edu.itson.happybox
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
+import mx.edu.itson.happybox.prefs.UserPrefs
 
 class PerfilActivity : AppCompatActivity() {
 
@@ -19,6 +23,15 @@ class PerfilActivity : AppCompatActivity() {
     private lateinit var btnCerrarSesion: MaterialButton
     private lateinit var bottomNav: BottomNavigationView
 
+    private lateinit var tvNombreUsuario: TextView
+
+    private val editNombreLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                pintarNombre()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil)
@@ -26,6 +39,12 @@ class PerfilActivity : AppCompatActivity() {
         inicializarVistas()
         configurarListeners()
         configurarBottomNav()
+        pintarNombre()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        pintarNombre()
     }
 
     private fun inicializarVistas() {
@@ -36,16 +55,19 @@ class PerfilActivity : AppCompatActivity() {
         optionEditarPerfil = findViewById(R.id.optionEditarPerfil)
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion)
         bottomNav = findViewById(R.id.bottomNavPerfil)
+
+        tvNombreUsuario = findViewById(R.id.tvNombreUsuario)
+    }
+
+    private fun pintarNombre() {
+        tvNombreUsuario.text = UserPrefs.getNombre(this)
     }
 
     private fun configurarListeners() {
-        btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
+        btnBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         optionMisPedidos.setOnClickListener {
-            val intent = Intent(this, MisPedidosActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, MisPedidosActivity::class.java))
         }
 
         optionDirecciones.setOnClickListener {
@@ -57,13 +79,13 @@ class PerfilActivity : AppCompatActivity() {
         }
 
         optionEditarPerfil.setOnClickListener {
-            Toast.makeText(this, "Editar perfil próximamente", Toast.LENGTH_SHORT).show()
+            editNombreLauncher.launch(Intent(this, EditarNombreActivity::class.java))
         }
 
         btnCerrarSesion.setOnClickListener {
-            // Regresar al Login o MainActivity
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            val intent = Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
             startActivity(intent)
             finish()
         }
@@ -75,21 +97,23 @@ class PerfilActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navInicio -> {
-                    val intent = Intent(this, HomeActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    val intent = Intent(this, HomeActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    }
                     startActivity(intent)
                     true
                 }
+
                 R.id.navBuscar -> {
-                    val intent = Intent(this, ProductosActivity::class.java)
-                    startActivity(intent)
+                    startActivity(Intent(this, ProductosActivity::class.java))
                     true
                 }
+
                 R.id.navCarrito -> {
-                    val intent = Intent(this, CarritoActivity::class.java)
-                    startActivity(intent)
+                    startActivity(Intent(this, CarritoActivity::class.java))
                     true
                 }
+
                 R.id.navPerfil -> true
                 else -> false
             }

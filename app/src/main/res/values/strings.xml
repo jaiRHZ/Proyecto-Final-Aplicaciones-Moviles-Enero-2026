@@ -103,4 +103,6 @@
     <string name="btnAceptar">Aceptar</string>
     <string name="btnVolver">Volver</string>
 
+    <string name="nombre_default">Usuario</string>
+
 </resources>
