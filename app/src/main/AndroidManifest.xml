@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HappyBox">
         <activity
+            android:name=".CrearResenaActivity"
+            android:exported="false" />
+        <activity
             android:name=".EditarNombreActivity"
             android:exported="false" />
         <activity

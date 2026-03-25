@@ -1,14 +1,15 @@
+// app/src/main/java/mx/edu/itson/happybox/DetailActivity.kt
 package mx.edu.itson.happybox
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
-import mx.edu.itson.happybox.model.CarritoManager
-import mx.edu.itson.happybox.model.Producto
 
 class DetailActivity : AppCompatActivity() {
 
@@ -23,8 +24,17 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var btnAddToCart: MaterialButton
     private lateinit var btnBuyNow: MaterialButton
 
+    private lateinit var tvResenas: TextView
+
     private var cantidad = 1
     private var productoId: Int = -1
+
+    private val crearResenaLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                Toast.makeText(this, "¡Reseña enviada (simulación)!", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +56,9 @@ class DetailActivity : AppCompatActivity() {
         btnPlus = findViewById(R.id.btnPlus)
         btnAddToCart = findViewById(R.id.btnAddToCart)
         btnBuyNow = findViewById(R.id.btnBuyNow)
+
+        // En tu XML este id ya existe: tvDetailReviews :contentReference[oaicite:1]{index=1}
+        tvResenas = findViewById(R.id.tvDetailReviews)
     }
 
     private fun recuperarDatos() {
@@ -62,8 +75,10 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun configurarListeners() {
-        btnBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+        btnBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+
+        tvResenas.setOnClickListener {
+            crearResenaLauncher.launch(Intent(this, CrearResenaActivity::class.java))
         }
 
         btnPlus.setOnClickListener {
@@ -80,7 +95,6 @@ class DetailActivity : AppCompatActivity() {
 
         btnAddToCart.setOnClickListener {
             Toast.makeText(this, "Agregado al carrito: $cantidad unidades", Toast.LENGTH_SHORT).show()
-            // Aquí iría la lógica real de CarritoManager
             finish()
         }
 
