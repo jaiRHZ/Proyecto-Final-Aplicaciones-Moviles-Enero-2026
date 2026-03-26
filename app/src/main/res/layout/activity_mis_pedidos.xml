@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_screen">
+
+    <!-- ── Toolbar ── -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarMisPedidos"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/happybox_primary"
+        app:contentInsetStart="16dp"
+        app:contentInsetEnd="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/btnBackPedidos"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/white"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/btnVolver"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/btnBackPedidos"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:text="@string/optionMisPedidos"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <!-- Se reemplazó el icono privado ic_menu_archive por ic_cart (público/local) -->
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_cart"
+                app:tint="@color/white"/>
+
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/tvResumenPedidos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="0 pedidos en total"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"/>
+
+    <ListView
+        android:id="@+id/listViewPedidos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false"/>
+
+</LinearLayout>

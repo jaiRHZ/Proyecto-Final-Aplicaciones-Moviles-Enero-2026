@@ -1,3 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">HappyBox</string>
+
+    <!-- ── Nombre de la app ── -->
+    <string name="app_name">Happy Box</string>
+    <string name="app_slogan">Regalos únicos para momentos especiales</string>
+
+    <!-- ── Pantalla 1: Bienvenida ── -->
+    <string name="btnIniciarSesion">Iniciar sesión</string>
+    <string name="btnRegistrarse">Registrarse</string>
+    <string name="txtOlvidaste">¿Olvidaste tu contraseña?</string>
+
+    <!-- ── Pantalla 2: Login ── -->
+    <string name="titleLogin">Iniciar sesión</string>
+    <string name="hintCorreo">Correo electrónico</string>
+    <string name="hintContrasena">Contraseña</string>
+    <string name="btnEntrar">Entrar</string>
+    <string name="txtSinCuenta">¿No tienes cuenta?</string>
+    <string name="linkRegistrarse">Registrarse</string>
+
+    <!-- ── Pantalla 3: Registro ── -->
+    <string name="titleRegistro">Crear cuenta</string>
+    <string name="hintNombre">Nombre completo</string>
+    <string name="hintTelefono">Teléfono</string>
+    <string name="btnCrearCuenta">Crear cuenta</string>
+    <string name="txtYaTieneCuenta">¿Ya tienes cuenta? Inicia sesión</string>
+
+    <!-- ── Pantalla 4: Home / Categorías ── -->
+    <string name="titleHome">Happy Box</string>
+    <string name="hintBuscar">Buscar productos…</string>
+    <string name="titleCategorias">Categorías</string>
+
+    <!-- Nombres de categorías -->
+    <string name="catDetalles">Detalles</string>
+    <string name="catGlobos">Globos</string>
+    <string name="catPeluches">Peluches</string>
+    <string name="catRegalos">Regalos</string>
+    <string name="catTazas">Tazas</string>
+
+    <!-- ── Pantalla 5: Lista de productos ── -->
+    <string name="titleProductos">Productos</string>
+    <string name="titleListaProductos">Lista de productos</string>
+
+    <!-- Chips / filtros -->
+    <string name="chipTodos">Todos</string>
+    <string name="chipPrecioAsc">Precio ↑</string>
+    <string name="chipPrecioDesc">Precio ↓</string>
+    <string name="chipNombre">Nombre</string>
+
+    <!-- Estado del producto -->
+    <string name="badgeDisponible">Disponible</string>
+    <string name="badgeAgotado">Agotado</string>
+
+    <!-- Toast de lista vacía -->
+    <string name="toastListaVacia">No se encontraron productos en esta categoría</string>
+    <string name="toastErrorCarga">Error al cargar los productos</string>
+
+    <!-- ── Pantalla 6: Detalle de producto ── -->
+    <string name="titleDetalle">Detalle</string>
+    <string name="btnAgregarCarrito">Agregar al carrito</string>
+    <string name="btnComprarAhora">Comprar ahora</string>
+    <string name="labelPrecio">Precio:</string>
+    <string name="labelDescripcion">Descripción</string>
+    <string name="toastAgregadoCarrito">Producto agregado al carrito</string>
+
+    <!-- ── Pantalla 7: Carrito ── -->
+    <string name="titleCarrito">Mi carrito</string>
+    <string name="labelTotal">Total</string>
+    <string name="labelSubtotal">Subtotal</string>
+    <string name="labelProductos">productos</string>
+    <string name="labelCarritoVacio">Tu carrito está vacío</string>
+    <string name="labelCarritoVacioSub">Agrega productos desde el catálogo</string>
+    <string name="btnConfirmarPedido">Confirmar pedido</string>
+    <string name="btnSeguirComprando">Seguir comprando</string>
+    <string name="btnEliminar">Eliminar</string>
+    <string name="toastCarritoVacio">Tu carrito está vacío</string>
+    <string name="toastPedidoConfirmado">¡Pedido confirmado! Nos pondremos en contacto contigo.</string>
+    <string name="toastProductoEliminado">Producto eliminado del carrito</string>
+    <string name="dialogEliminarTitulo">¿Eliminar producto?</string>
+    <string name="dialogEliminarMensaje">¿Seguro que quieres quitar este producto del carrito?</string>
+    <string name="formatoPrecioCarrito">$%.2f MXN</string>
+    <string name="formatoCantidadItems">%d artículo(s) en tu carrito</string>
+
+    <!-- ── Pantalla 8: Perfil ── -->
+    <string name="titlePerfil">Mi perfil</string>
+    <string name="optionMisPedidos">Mis pedidos</string>
+    <string name="optionDirecciones">Mis direcciones</string>
+    <string name="optionNotificaciones">Notificaciones</string>
+    <string name="optionEditarPerfil">Editar perfil</string>
+    <string name="btnCerrarSesion">Cerrar sesión</string>
+    <string name="toastSesionCerrada">Sesión cerrada correctamente</string>
+
+    <!-- ── Bottom Navigation ── -->
+    <string name="navInicio">Inicio</string>
+    <string name="navBuscar">Buscar</string>
+    <string name="navCarrito">Carrito</string>
+    <string name="navPerfil">Perfil</string>
+
+    <!-- ── Mensajes generales ── -->
+    <string name="toastSinInternet">Sin conexión a internet</string>
+    <string name="toastErrorGeneral">Ocurrió un error, intenta de nuevo</string>
+    <string name="btnCancelar">Cancelar</string>
+    <string name="btnAceptar">Aceptar</string>
+    <string name="btnVolver">Volver</string>
+
+    <string name="nombre_default">Usuario</string>
+
 </resources>

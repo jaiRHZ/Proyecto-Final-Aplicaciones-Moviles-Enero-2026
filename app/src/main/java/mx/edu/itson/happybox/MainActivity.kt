@@ -1,20 +1,35 @@
 package mx.edu.itson.happybox
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.TextView
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.button.MaterialButton
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var btnIniciarSesion: Button
+    private lateinit var btnRegistrarse: MaterialButton
+    private lateinit var tvOlvidaste: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        btnIniciarSesion = findViewById(R.id.btnIniciarSesion)
+        btnRegistrarse   = findViewById(R.id.btnRegistrarse)
+        tvOlvidaste      = findViewById(R.id.tvOlvidaste)
+
+        btnIniciarSesion.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnRegistrarse.setOnClickListener {
+        }
+
+        tvOlvidaste.setOnClickListener {
         }
     }
 }
