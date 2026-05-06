@@ -1,20 +1,29 @@
 package mx.edu.itson.happybox
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class RegisterActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_register)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        val btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
+        val tvVolverLogin = findViewById<TextView>(R.id.tvVolverLogin)
+
+        btnCrearCuenta.setOnClickListener {
+            // Lógica de registro aquí
+            Toast.makeText(this, "Cuenta creada con éxito", Toast.LENGTH_SHORT).show()
+            finish() // Regresa a la pantalla anterior
+        }
+
+        tvVolverLogin.setOnClickListener {
+            finish() // Regresa al Login/Main
         }
     }
 }

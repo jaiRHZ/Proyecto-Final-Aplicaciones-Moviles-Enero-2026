@@ -27,9 +27,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnRegistrarse.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
 
         tvOlvidaste.setOnClickListener {
+            // Implementar recuperación de contraseña si es necesario
         }
     }
 }
