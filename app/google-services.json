@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "427196921862",
+    "project_id": "happybox-8bfa5",
+    "storage_bucket": "happybox-8bfa5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427196921862:android:461ff7362e15abd033ab87",
+        "android_client_info": {
+          "package_name": "mx.edu.itson.happybox"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMwP74in8C0x_lVYv9upa4N4rT4wKzuIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
