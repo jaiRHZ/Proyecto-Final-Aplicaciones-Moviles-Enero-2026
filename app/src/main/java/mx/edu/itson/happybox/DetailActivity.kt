@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
 
 class DetailActivity : AppCompatActivity() {
 
@@ -25,6 +26,7 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var btnBuyNow: MaterialButton
 
     private lateinit var tvResenas: TextView
+    private lateinit var chipEscribirResena: Chip
 
     private var cantidad = 1
     private var productoId: Int = -1
@@ -57,8 +59,9 @@ class DetailActivity : AppCompatActivity() {
         btnAddToCart = findViewById(R.id.btnAddToCart)
         btnBuyNow = findViewById(R.id.btnBuyNow)
 
-        // En tu XML este id ya existe: tvDetailReviews :contentReference[oaicite:1]{index=1}
-        tvResenas = findViewById(R.id.tvDetailReviews)
+        // En tu XML este id ya existe: tvDetailReviews
+        tvResenas          = findViewById(R.id.tvDetailReviews)
+        chipEscribirResena = findViewById(R.id.chipEscribirResena)
     }
 
     private fun recuperarDatos() {
@@ -78,7 +81,17 @@ class DetailActivity : AppCompatActivity() {
         btnBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         tvResenas.setOnClickListener {
-            crearResenaLauncher.launch(Intent(this, CrearResenaActivity::class.java))
+            val intent = Intent(this, CrearResenaActivity::class.java).apply {
+                putExtra("productoId", productoId)
+            }
+            crearResenaLauncher.launch(intent)
+        }
+
+        chipEscribirResena.setOnClickListener {
+            val intent = Intent(this, CrearResenaActivity::class.java).apply {
+                putExtra("productoId", productoId)
+            }
+            crearResenaLauncher.launch(intent)
         }
 
         btnPlus.setOnClickListener {
