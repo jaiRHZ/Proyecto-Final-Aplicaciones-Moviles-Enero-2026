@@ -7,16 +7,16 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.card.MaterialCardView
+import com.google.android.material.chip.Chip
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var etBuscar: EditText
-    private lateinit var cardPeluches: MaterialCardView
-    private lateinit var cardGlobos: MaterialCardView
-    private lateinit var cardTazas: MaterialCardView
-    private lateinit var cardDetalles: MaterialCardView
-    private lateinit var cardRegalos: MaterialCardView
+    private lateinit var cardPeluches: Chip
+    private lateinit var cardGlobos: Chip
+    private lateinit var cardTazas: Chip
+    private lateinit var cardDetalles: Chip
+    private lateinit var cardRegalos: Chip
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var ivCart: ImageView
     private lateinit var ivProfile: ImageView
@@ -33,11 +33,11 @@ class HomeActivity : AppCompatActivity() {
 
     private fun inicializarVistas() {
         etBuscar      = findViewById(R.id.etBuscar)
-        cardPeluches  = findViewById(R.id.cardPeluches)
-        cardGlobos    = findViewById(R.id.cardGlobos)
-        cardTazas     = findViewById(R.id.cardTazas)
-        cardDetalles  = findViewById(R.id.cardDetalles)
-        cardRegalos   = findViewById(R.id.cardRegalos)
+        cardPeluches  = findViewById<Chip>(R.id.cardPeluches)
+        cardGlobos    = findViewById<Chip>(R.id.cardGlobos)
+        cardTazas     = findViewById<Chip>(R.id.cardTazas)
+        cardDetalles  = findViewById<Chip>(R.id.cardDetalles)
+        cardRegalos   = findViewById<Chip>(R.id.cardRegalos)
         bottomNav     = findViewById(R.id.bottomNavHome)
         ivCart        = findViewById(R.id.ivCart)
         ivProfile     = findViewById(R.id.ivProfile)

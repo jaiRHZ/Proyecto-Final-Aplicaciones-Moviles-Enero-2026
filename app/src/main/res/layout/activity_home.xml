@@ -96,176 +96,104 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="12dp"/>
 
-            <!-- ── Grid de Categorías con Diseño de la Imagen ── -->
-            <GridLayout
+            <!-- ── Barra de Chips de Categorías ── -->
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:alignmentMode="alignMargins">
+                android:scrollbars="none"
+                android:layout_marginBottom="16dp">
 
-                <!-- Detalles (Sparkles) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardDetalles"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_category_card"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/btn_star_big_on"
-                            app:tint="@color/white"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/catDetalles"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.chip.ChipGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp">
 
-                <!-- Globos (Party) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardGlobos"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_category_card"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/ic_menu_send"
-                            app:tint="@color/white"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/catGlobos"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    <!-- Chip: Detalles -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/cardDetalles"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/catDetalles"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/happybox_primary"
+                        app:chipStrokeWidth="0dp"
+                        app:chipIcon="@android:drawable/btn_star_big_on"
+                        app:chipIconTint="@color/white"
+                        app:chipIconVisible="true"
+                        android:checkable="false"
+                        android:layout_margin="4dp"/>
 
-                <!-- Peluches (Heart) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardPeluches"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_category_card"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/btn_star_big_off"
-                            app:tint="@color/white"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/catPeluches"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    <!-- Chip: Globos -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/cardGlobos"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/catGlobos"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/happybox_primary"
+                        app:chipStrokeWidth="0dp"
+                        app:chipIcon="@android:drawable/ic_menu_send"
+                        app:chipIconTint="@color/white"
+                        app:chipIconVisible="true"
+                        android:checkable="false"
+                        android:layout_margin="4dp"/>
 
-                <!-- Regalos (Gift) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardRegalos"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_category_card"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/ic_menu_view"
-                            app:tint="@color/white"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/catRegalos"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    <!-- Chip: Peluches -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/cardPeluches"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/catPeluches"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/happybox_primary"
+                        app:chipStrokeWidth="0dp"
+                        app:chipIcon="@android:drawable/btn_star_big_off"
+                        app:chipIconTint="@color/white"
+                        app:chipIconVisible="true"
+                        android:checkable="false"
+                        android:layout_margin="4dp"/>
 
-                <!-- Tazas (Coffee) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardTazas"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_category_card"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/ic_menu_compass"
-                            app:tint="@color/white"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/catTazas"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    <!-- Chip: Regalos -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/cardRegalos"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/catRegalos"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/happybox_primary"
+                        app:chipStrokeWidth="0dp"
+                        app:chipIcon="@android:drawable/ic_menu_view"
+                        app:chipIconTint="@color/white"
+                        app:chipIconVisible="true"
+                        android:checkable="false"
+                        android:layout_margin="4dp"/>
 
-            </GridLayout>
+                    <!-- Chip: Tazas -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/cardTazas"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/catTazas"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/happybox_primary"
+                        app:chipStrokeWidth="0dp"
+                        app:chipIcon="@android:drawable/ic_menu_compass"
+                        app:chipIconTint="@color/white"
+                        app:chipIconVisible="true"
+                        android:checkable="false"
+                        android:layout_margin="4dp"/>
+
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
 
         </LinearLayout>
     </ScrollView>
