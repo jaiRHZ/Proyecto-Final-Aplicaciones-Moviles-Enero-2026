@@ -85,7 +85,7 @@
     <string name="titlePerfil">Mi perfil</string>
     <string name="optionMisPedidos">Mis pedidos</string>
     <string name="optionDirecciones">Mis direcciones</string>
-    <string name="optionNotificaciones">Notificaciones</string>
+    <string name="optionResenas">Mis Reseñas</string>
     <string name="optionEditarPerfil">Editar perfil</string>
     <string name="btnCerrarSesion">Cerrar sesión</string>
     <string name="toastSesionCerrada">Sesión cerrada correctamente</string>
