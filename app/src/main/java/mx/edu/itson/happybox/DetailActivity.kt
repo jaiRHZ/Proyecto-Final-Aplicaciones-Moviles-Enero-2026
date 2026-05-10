@@ -9,8 +9,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
+import com.google.firebase.firestore.FirebaseFirestore
+import mx.edu.itson.happybox.adapter.ResenaAdapter
+import mx.edu.itson.happybox.model.Resena
+import android.util.Log
 
 class DetailActivity : AppCompatActivity() {
 
@@ -27,6 +33,10 @@ class DetailActivity : AppCompatActivity() {
 
     private lateinit var tvResenas: TextView
     private lateinit var chipEscribirResena: Chip
+    private lateinit var rvResenas: RecyclerView
+
+    private lateinit var resenaAdapter: ResenaAdapter
+    private lateinit var db: FirebaseFirestore
 
     private var cantidad = 1
     private var productoId: Int = -1
@@ -34,7 +44,8 @@ class DetailActivity : AppCompatActivity() {
     private val crearResenaLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                Toast.makeText(this, "¡Reseña enviada (simulación)!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "¡Reseña enviada!", Toast.LENGTH_SHORT).show()
+                cargarResenas()
             }
         }
 
@@ -62,6 +73,12 @@ class DetailActivity : AppCompatActivity() {
         // En tu XML este id ya existe: tvDetailReviews
         tvResenas          = findViewById(R.id.tvDetailReviews)
         chipEscribirResena = findViewById(R.id.chipEscribirResena)
+        rvResenas          = findViewById(R.id.rvResenas)
+
+        db = FirebaseFirestore.getInstance()
+        resenaAdapter = ResenaAdapter(emptyList())
+        rvResenas.layoutManager = LinearLayoutManager(this)
+        rvResenas.adapter = resenaAdapter
     }
 
     private fun recuperarDatos() {
@@ -75,6 +92,34 @@ class DetailActivity : AppCompatActivity() {
         tvPrice.text = String.format("$%.2f", precio)
         tvDescription.text = descripcion
         ivProduct.setImageResource(if (imagenRes != 0) imagenRes else R.drawable.ic_placeholder_producto)
+
+        cargarResenas()
+    }
+
+    private fun cargarResenas() {
+        if (productoId == -1) return
+
+        db.collection("productos").document(productoId.toString()).collection("resenas")
+            .orderBy("fecha", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                val lista = mutableListOf<Resena>()
+                for (doc in result) {
+                    val resena = doc.toObject(Resena::class.java)
+                    lista.add(resena)
+                }
+                resenaAdapter.actualizarLista(lista)
+
+                if (lista.isNotEmpty()) {
+                    val promedio = lista.map { it.rating }.average()
+                    tvResenas.text = String.format("%.1f (%d reseñas)", promedio, lista.size)
+                } else {
+                    tvResenas.text = "0 (0 reseñas)"
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("DetailActivity", "Error al cargar reseñas", e)
+            }
     }
 
     private fun configurarListeners() {
