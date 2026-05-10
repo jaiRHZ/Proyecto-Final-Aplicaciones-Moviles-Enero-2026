@@ -9,4 +9,7 @@ data class Resena(
     val autorUid: String = "",     // UID de Firebase Auth del autor
     val autorNombre: String = "",  // Nombre del autor (para mostrar en UI)
     val fecha: Long = 0L           // System.currentTimeMillis() al crear
-)
+) {
+    @get:com.google.firebase.firestore.Exclude
+    var productoNombre: String = ""
+}

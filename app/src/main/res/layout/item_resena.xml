@@ -39,6 +39,26 @@
                 android:text="10 may. 2026"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"/>
+
+            <ImageButton
+                android:id="@+id/btnEditResena"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="12dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_edit"
+                android:visibility="gone"
+                app:tint="@color/happybox_primary"/>
+
+            <ImageButton
+                android:id="@+id/btnDeleteResena"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="12dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_delete"
+                android:visibility="gone"
+                app:tint="#D32F2F"/>
         </LinearLayout>
 
         <LinearLayout

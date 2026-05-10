@@ -19,7 +19,7 @@ class PerfilActivity : AppCompatActivity() {
     private lateinit var btnBack: ImageButton
     private lateinit var optionMisPedidos: LinearLayout
     private lateinit var optionDirecciones: LinearLayout
-    private lateinit var optionNotificaciones: LinearLayout
+    private lateinit var optionResenas: LinearLayout
     private lateinit var optionEditarPerfil: LinearLayout
     private lateinit var btnCerrarSesion: MaterialButton
     private lateinit var bottomNav: BottomNavigationView
@@ -60,7 +60,7 @@ class PerfilActivity : AppCompatActivity() {
         btnBack              = findViewById(R.id.btnBackProfile)
         optionMisPedidos     = findViewById(R.id.optionMisPedidos)
         optionDirecciones    = findViewById(R.id.optionDirecciones)
-        optionNotificaciones = findViewById(R.id.optionResenas)
+        optionResenas        = findViewById(R.id.optionResenas)
         optionEditarPerfil   = findViewById(R.id.optionEditarPerfil)
         btnCerrarSesion      = findViewById(R.id.btnCerrarSesion)
         bottomNav            = findViewById(R.id.bottomNavPerfil)
@@ -111,8 +111,8 @@ class PerfilActivity : AppCompatActivity() {
             Toast.makeText(this, "Mis direcciones próximamente", Toast.LENGTH_SHORT).show()
         }
 
-        optionNotificaciones.setOnClickListener {
-            Toast.makeText(this, "Notificaciones próximamente", Toast.LENGTH_SHORT).show()
+        optionResenas.setOnClickListener {
+            startActivity(Intent(this, MisResenasActivity::class.java))
         }
 
         optionEditarPerfil.setOnClickListener {

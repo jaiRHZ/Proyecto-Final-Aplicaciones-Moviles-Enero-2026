@@ -42,6 +42,11 @@
             android:label="@string/optionMisPedidos"
             android:theme="@style/Theme.HappyBox.NoActionBar" />
         <activity
+            android:name=".MisResenasActivity"
+            android:exported="false"
+            android:label="@string/optionResenas"
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
+        <activity
             android:name=".DetailActivity"
             android:exported="false"
             android:theme="@style/Theme.HappyBox.NoActionBar" />
