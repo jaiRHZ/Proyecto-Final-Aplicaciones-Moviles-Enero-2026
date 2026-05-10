@@ -106,19 +106,37 @@
                     android:paddingEnd="4dp">
 
                     <com.google.android.material.chip.Chip
+                        android:id="@+id/chipTodos"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Todos"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
+                        app:chipIconVisible="false"
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
+                        android:checked="true"
+                        android:layout_margin="4dp"/>
+
+                    <com.google.android.material.chip.Chip
                         android:id="@+id/cardDetalles"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/catDetalles"
-                        android:textColor="@color/white"
-                        app:chipBackgroundColor="@color/happybox_primary"
-                        app:chipStrokeWidth="0dp"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
                         app:chipIcon="@android:drawable/btn_star_big_on"
-                        app:chipIconTint="@color/white"
+                        app:chipIconTint="@color/chip_text_selector"
                         app:chipIconVisible="true"
-                        android:checkable="false"
-                        android:layout_margin="0dp"/>
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
+                        android:layout_margin="4dp"/>
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/cardGlobos"
@@ -126,13 +144,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/catGlobos"
-                        android:textColor="@color/white"
-                        app:chipBackgroundColor="@color/happybox_primary"
-                        app:chipStrokeWidth="0dp"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
                         app:chipIcon="@android:drawable/ic_menu_send"
-                        app:chipIconTint="@color/white"
+                        app:chipIconTint="@color/chip_text_selector"
                         app:chipIconVisible="true"
-                        android:checkable="false"
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
                         android:layout_margin="4dp"/>
 
                     <com.google.android.material.chip.Chip
@@ -141,13 +161,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/catPeluches"
-                        android:textColor="@color/white"
-                        app:chipBackgroundColor="@color/happybox_primary"
-                        app:chipStrokeWidth="0dp"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
                         app:chipIcon="@android:drawable/btn_star_big_off"
-                        app:chipIconTint="@color/white"
+                        app:chipIconTint="@color/chip_text_selector"
                         app:chipIconVisible="true"
-                        android:checkable="false"
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
                         android:layout_margin="4dp"/>
 
                     <com.google.android.material.chip.Chip
@@ -156,13 +178,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/catRegalos"
-                        android:textColor="@color/white"
-                        app:chipBackgroundColor="@color/happybox_primary"
-                        app:chipStrokeWidth="0dp"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
                         app:chipIcon="@android:drawable/ic_menu_view"
-                        app:chipIconTint="@color/white"
+                        app:chipIconTint="@color/chip_text_selector"
                         app:chipIconVisible="true"
-                        android:checkable="false"
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
                         android:layout_margin="4dp"/>
 
                     <com.google.android.material.chip.Chip
@@ -171,13 +195,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/catTazas"
-                        android:textColor="@color/white"
-                        app:chipBackgroundColor="@color/happybox_primary"
-                        app:chipStrokeWidth="0dp"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
                         app:chipIcon="@android:drawable/ic_menu_compass"
-                        app:chipIconTint="@color/white"
+                        app:chipIconTint="@color/chip_text_selector"
                         app:chipIconVisible="true"
-                        android:checkable="false"
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
                         android:layout_margin="4dp"/>
 
                 </com.google.android.material.chip.ChipGroup>

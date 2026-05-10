@@ -20,6 +20,7 @@ import mx.edu.itson.happybox.model.ProductoSeeder
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var etBuscar: EditText
+    private lateinit var chipTodos: Chip
     private lateinit var cardPeluches: Chip
     private lateinit var cardGlobos: Chip
     private lateinit var cardTazas: Chip
@@ -31,6 +32,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var rvSugeridos: RecyclerView
     private lateinit var rvTodosProductos: RecyclerView
     private lateinit var db: FirebaseFirestore
+
+    private var listaCompleta: List<Producto> = emptyList()
+    private var adapterLista: ProductoListaAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,26 +48,28 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun inicializarVistas() {
-        etBuscar      = findViewById(R.id.etBuscar)
-        cardPeluches  = findViewById<Chip>(R.id.cardPeluches)
-        cardGlobos    = findViewById<Chip>(R.id.cardGlobos)
-        cardTazas     = findViewById<Chip>(R.id.cardTazas)
-        cardDetalles  = findViewById<Chip>(R.id.cardDetalles)
-        cardRegalos   = findViewById<Chip>(R.id.cardRegalos)
-        bottomNav     = findViewById(R.id.bottomNavHome)
-        ivCart        = findViewById(R.id.ivCart)
-        ivProfile     = findViewById(R.id.ivProfile)
-        rvSugeridos       = findViewById(R.id.rvSugeridos)
-        rvTodosProductos  = findViewById(R.id.rvTodosProductos)
-        db                = FirebaseFirestore.getInstance()
+        etBuscar         = findViewById(R.id.etBuscar)
+        chipTodos        = findViewById(R.id.chipTodos)
+        cardPeluches     = findViewById<Chip>(R.id.cardPeluches)
+        cardGlobos       = findViewById<Chip>(R.id.cardGlobos)
+        cardTazas        = findViewById<Chip>(R.id.cardTazas)
+        cardDetalles     = findViewById<Chip>(R.id.cardDetalles)
+        cardRegalos      = findViewById<Chip>(R.id.cardRegalos)
+        bottomNav        = findViewById(R.id.bottomNavHome)
+        ivCart           = findViewById(R.id.ivCart)
+        ivProfile        = findViewById(R.id.ivProfile)
+        rvSugeridos      = findViewById(R.id.rvSugeridos)
+        rvTodosProductos = findViewById(R.id.rvTodosProductos)
+        db               = FirebaseFirestore.getInstance()
     }
 
     private fun configurarClickListeners() {
-        cardPeluches.setOnClickListener { irAProductos(categoria = "Peluches") }
-        cardGlobos.setOnClickListener   { irAProductos(categoria = "Globos") }
-        cardTazas.setOnClickListener    { irAProductos(categoria = "Tazas") }
-        cardDetalles.setOnClickListener { irAProductos(categoria = "Detalles") }
-        cardRegalos.setOnClickListener  { irAProductos(categoria = "Regalos") }
+        chipTodos.setOnClickListener    { filtrarPorCategoria(null) }
+        cardDetalles.setOnClickListener { filtrarPorCategoria("Detalles") }
+        cardGlobos.setOnClickListener   { filtrarPorCategoria("Globos") }
+        cardPeluches.setOnClickListener { filtrarPorCategoria("Peluches") }
+        cardRegalos.setOnClickListener  { filtrarPorCategoria("Regalos") }
+        cardTazas.setOnClickListener    { filtrarPorCategoria("Tazas") }
 
         ivCart.setOnClickListener {
             startActivity(Intent(this, CarritoActivity::class.java))
@@ -94,8 +100,6 @@ class HomeActivity : AppCompatActivity() {
         query?.let { intent.putExtra("query", it) }
         startActivity(intent)
     }
-
-    /** Una sola consulta a Firestore alimenta tanto el carrusel como la lista completa */
     private fun cargarProductos() {
         rvSugeridos.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -109,21 +113,43 @@ class HomeActivity : AppCompatActivity() {
                         .mapNotNull { it.toObject(Producto::class.java) }
                         .filter { it.disponible }
 
-                    // Carrusel: 6 aleatorios
+                    listaCompleta = disponibles.sortedBy { it.nombre }
+
                     rvSugeridos.adapter = ProductoSugeridoAdapter(
                         context  = this,
                         productos = disponibles.shuffled().take(6),
                         onClick  = { irADetalle(it) }
                     )
 
-                    // Lista completa: todos ordenados por nombre
-                    rvTodosProductos.adapter = ProductoListaAdapter(
+                    adapterLista = ProductoListaAdapter(
                         context  = this,
-                        productos = disponibles.sortedBy { it.nombre },
+                        productos = listaCompleta.toMutableList(),
                         onClick  = { irADetalle(it) }
                     )
+                    rvTodosProductos.adapter = adapterLista
                 }
         }
+    }
+    private fun filtrarPorCategoria(categoria: String?) {
+        chipTodos.isChecked    = (categoria == null)
+        cardDetalles.isChecked = (categoria == "Detalles")
+        cardGlobos.isChecked   = (categoria == "Globos")
+        cardPeluches.isChecked = (categoria == "Peluches")
+        cardRegalos.isChecked  = (categoria == "Regalos")
+        cardTazas.isChecked    = (categoria == "Tazas")
+
+        val filtrada = if (categoria == null) {
+            listaCompleta
+        } else {
+            listaCompleta.filter { it.categoria == categoria }
+        }
+
+        adapterLista = ProductoListaAdapter(
+            context  = this,
+            productos = filtrada.toMutableList(),
+            onClick  = { irADetalle(it) }
+        )
+        rvTodosProductos.adapter = adapterLista
     }
 
     private fun irADetalle(producto: Producto) {

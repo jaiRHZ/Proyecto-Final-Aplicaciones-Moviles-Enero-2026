@@ -12,7 +12,7 @@ import mx.edu.itson.happybox.model.Producto
 
 class ProductoListaAdapter(
     private val context: Context,
-    private val productos: List<Producto>,
+    private val productos: MutableList<Producto>,
     private val onClick: (Producto) -> Unit
 ) : RecyclerView.Adapter<ProductoListaAdapter.ViewHolder>() {
 
