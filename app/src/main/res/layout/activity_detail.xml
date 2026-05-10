@@ -29,8 +29,6 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_placeholder_producto" />
 
-
-
             </FrameLayout>
 
             <LinearLayout
@@ -283,7 +281,6 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnBuyNow"
-            style="@style/Widget.HappyBox.Button.Primary"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
