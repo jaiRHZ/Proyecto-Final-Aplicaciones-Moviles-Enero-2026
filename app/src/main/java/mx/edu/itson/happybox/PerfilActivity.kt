@@ -60,7 +60,7 @@ class PerfilActivity : AppCompatActivity() {
         btnBack              = findViewById(R.id.btnBackProfile)
         optionMisPedidos     = findViewById(R.id.optionMisPedidos)
         optionDirecciones    = findViewById(R.id.optionDirecciones)
-        optionNotificaciones = findViewById(R.id.optionNotificaciones)
+        optionNotificaciones = findViewById(R.id.optionResenas)
         optionEditarPerfil   = findViewById(R.id.optionEditarPerfil)
         btnCerrarSesion      = findViewById(R.id.btnCerrarSesion)
         bottomNav            = findViewById(R.id.bottomNavPerfil)
