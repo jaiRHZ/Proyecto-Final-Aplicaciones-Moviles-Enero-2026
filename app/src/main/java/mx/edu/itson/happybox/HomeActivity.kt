@@ -168,16 +168,16 @@ class HomeActivity : AppCompatActivity() {
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navInicio -> true
-                R.id.navBuscar -> {
-                    etBuscar.requestFocus()
+                R.id.navInicio  -> true
+                R.id.navBuscar  -> {
+                    startActivity(Intent(this, ProductosActivity::class.java))
                     true
                 }
                 R.id.navCarrito -> {
                     startActivity(Intent(this, CarritoActivity::class.java))
                     true
                 }
-                R.id.navPerfil -> {
+                R.id.navPerfil  -> {
                     startActivity(Intent(this, PerfilActivity::class.java))
                     true
                 }

@@ -171,24 +171,22 @@ class ProductosActivity : AppCompatActivity() {
         chipNombre.isChecked     = false
     }
 
+    private fun navegarA(destino: Class<*>) {
+        startActivity(Intent(this, destino).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        })
+        finish()
+    }
+
     private fun configurarBottomNav() {
         bottomNav.selectedItemId = R.id.navBuscar
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navInicio -> {
-                    finish()
-                    true
-                }
-                R.id.navBuscar -> true
-                R.id.navCarrito -> {
-                    startActivity(Intent(this, CarritoActivity::class.java))
-                    true
-                }
-                R.id.navPerfil -> {
-                    startActivity(Intent(this, PerfilActivity::class.java))
-                    true
-                }
+                R.id.navInicio  -> { navegarA(HomeActivity::class.java);    true }
+                R.id.navBuscar  -> true
+                R.id.navCarrito -> { navegarA(CarritoActivity::class.java); true }
+                R.id.navPerfil  -> { navegarA(PerfilActivity::class.java);  true }
                 else -> false
             }
         }

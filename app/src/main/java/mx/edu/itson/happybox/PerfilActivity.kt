@@ -129,30 +129,22 @@ class PerfilActivity : AppCompatActivity() {
         }
     }
 
+    private fun navegarA(destino: Class<*>) {
+        startActivity(Intent(this, destino).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        })
+        finish()
+    }
+
     private fun configurarBottomNav() {
         bottomNav.selectedItemId = R.id.navPerfil
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navInicio -> {
-                    val intent = Intent(this, HomeActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    }
-                    startActivity(intent)
-                    true
-                }
-
-                R.id.navBuscar -> {
-                    startActivity(Intent(this, ProductosActivity::class.java))
-                    true
-                }
-
-                R.id.navCarrito -> {
-                    startActivity(Intent(this, CarritoActivity::class.java))
-                    true
-                }
-
-                R.id.navPerfil -> true
+                R.id.navInicio  -> { navegarA(HomeActivity::class.java);      true }
+                R.id.navBuscar  -> { navegarA(ProductosActivity::class.java); true }
+                R.id.navCarrito -> { navegarA(CarritoActivity::class.java);   true }
+                R.id.navPerfil  -> true
                 else -> false
             }
         }
