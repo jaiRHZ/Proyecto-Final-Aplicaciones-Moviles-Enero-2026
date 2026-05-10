@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import mx.edu.itson.happybox.adapter.ProductoListaAdapter
 import mx.edu.itson.happybox.adapter.ProductoSugeridoAdapter
@@ -28,7 +31,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var cardRegalos: Chip
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var ivCart: ImageView
-    private lateinit var ivProfile: ImageView
+    private lateinit var ivProfile: MaterialCardView
+    private lateinit var tvHomeIniciales: TextView
     private lateinit var rvSugeridos: RecyclerView
     private lateinit var rvTodosProductos: RecyclerView
     private lateinit var db: FirebaseFirestore
@@ -45,6 +49,12 @@ class HomeActivity : AppCompatActivity() {
         configurarBuscador()
         configurarBottomNav()
         cargarProductos()
+        cargarInicialesUsuario()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cargarInicialesUsuario()
     }
 
     private fun inicializarVistas() {
@@ -58,6 +68,7 @@ class HomeActivity : AppCompatActivity() {
         bottomNav        = findViewById(R.id.bottomNavHome)
         ivCart           = findViewById(R.id.ivCart)
         ivProfile        = findViewById(R.id.ivProfile)
+        tvHomeIniciales  = findViewById(R.id.tvHomeIniciales)
         rvSugeridos      = findViewById(R.id.rvSugeridos)
         rvTodosProductos = findViewById(R.id.rvTodosProductos)
         db               = FirebaseFirestore.getInstance()
@@ -150,6 +161,29 @@ class HomeActivity : AppCompatActivity() {
             onClick  = { irADetalle(it) }
         )
         rvTodosProductos.adapter = adapterLista
+    }
+
+    private fun cargarInicialesUsuario() {
+        val usuario = FirebaseAuth.getInstance().currentUser ?: return
+        
+        db.collection("usuarios").document(usuario.uid)
+            .get()
+            .addOnSuccessListener { doc ->
+                val nombre = doc.getString("nombre") ?: ""
+                tvHomeIniciales.text = obtenerIniciales(nombre)
+            }
+            .addOnFailureListener {
+                tvHomeIniciales.text = "?"
+            }
+    }
+
+    private fun obtenerIniciales(nombre: String): String {
+        val partes = nombre.trim().split(" ").filter { it.isNotEmpty() }
+        return when {
+            partes.size >= 2 -> "${partes[0].first().uppercaseChar()}${partes[1].first().uppercaseChar()}"
+            partes.size == 1 -> partes[0].first().uppercaseChar().toString()
+            else             -> "?"
+        }
     }
 
     private fun irADetalle(producto: Producto) {

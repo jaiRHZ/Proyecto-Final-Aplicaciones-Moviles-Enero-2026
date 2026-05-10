@@ -45,14 +45,26 @@
                     android:clickable="true"
                     android:focusable="true"/>
 
-                <ImageView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/ivProfile"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/ic_person"
-                    app:tint="@color/white"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:strokeWidth="0dp"
                     android:clickable="true"
-                    android:focusable="true"/>
+                    android:focusable="true">
+                    <TextView
+                        android:id="@+id/tvHomeIniciales"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="?"
+                        android:textColor="@color/happybox_primary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
