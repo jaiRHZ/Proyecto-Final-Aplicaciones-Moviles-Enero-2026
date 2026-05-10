@@ -6,8 +6,16 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.chip.Chip
+import com.google.firebase.firestore.FirebaseFirestore
+import mx.edu.itson.happybox.adapter.ProductoListaAdapter
+import mx.edu.itson.happybox.adapter.ProductoSugeridoAdapter
+import mx.edu.itson.happybox.model.Producto
+import mx.edu.itson.happybox.model.ProductoSeeder
 
 class HomeActivity : AppCompatActivity() {
 
@@ -20,6 +28,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var ivCart: ImageView
     private lateinit var ivProfile: ImageView
+    private lateinit var rvSugeridos: RecyclerView
+    private lateinit var rvTodosProductos: RecyclerView
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +40,7 @@ class HomeActivity : AppCompatActivity() {
         configurarClickListeners()
         configurarBuscador()
         configurarBottomNav()
+        cargarProductos()
     }
 
     private fun inicializarVistas() {
@@ -41,6 +53,9 @@ class HomeActivity : AppCompatActivity() {
         bottomNav     = findViewById(R.id.bottomNavHome)
         ivCart        = findViewById(R.id.ivCart)
         ivProfile     = findViewById(R.id.ivProfile)
+        rvSugeridos       = findViewById(R.id.rvSugeridos)
+        rvTodosProductos  = findViewById(R.id.rvTodosProductos)
+        db                = FirebaseFirestore.getInstance()
     }
 
     private fun configurarClickListeners() {
@@ -77,6 +92,48 @@ class HomeActivity : AppCompatActivity() {
         val intent = Intent(this, ProductosActivity::class.java)
         categoria?.let { intent.putExtra("categoria", it) }
         query?.let { intent.putExtra("query", it) }
+        startActivity(intent)
+    }
+
+    /** Una sola consulta a Firestore alimenta tanto el carrusel como la lista completa */
+    private fun cargarProductos() {
+        rvSugeridos.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvTodosProductos.layoutManager = GridLayoutManager(this, 2)
+
+        ProductoSeeder.sembrar(db) {
+            db.collection("productos")
+                .get()
+                .addOnSuccessListener { snapshot ->
+                    val disponibles = snapshot.documents
+                        .mapNotNull { it.toObject(Producto::class.java) }
+                        .filter { it.disponible }
+
+                    // Carrusel: 6 aleatorios
+                    rvSugeridos.adapter = ProductoSugeridoAdapter(
+                        context  = this,
+                        productos = disponibles.shuffled().take(6),
+                        onClick  = { irADetalle(it) }
+                    )
+
+                    // Lista completa: todos ordenados por nombre
+                    rvTodosProductos.adapter = ProductoListaAdapter(
+                        context  = this,
+                        productos = disponibles.sortedBy { it.nombre },
+                        onClick  = { irADetalle(it) }
+                    )
+                }
+        }
+    }
+
+    private fun irADetalle(producto: Producto) {
+        val intent = Intent(this, DetailActivity::class.java).apply {
+            putExtra("productoId",          producto.id)
+            putExtra("productoNombre",      producto.nombre)
+            putExtra("productoPrecio",      producto.precio)
+            putExtra("productoDescription", producto.descripcion)
+            putExtra("productoImagenRes",   producto.imagenResId)
+        }
         startActivity(intent)
     }
 

@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:background="@color/background_screen">
 
-    <!-- ── Toolbar Personalizada ── -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarHome"
         android:layout_width="match_parent"
@@ -58,7 +57,27 @@
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <ScrollView
+    <EditText
+        android:id="@+id/etBuscar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_input_rounded"
+        android:backgroundTint="@color/happybox_secondary"
+        android:hint="@string/hintBuscar"
+        android:textColorHint="#9E9E9E"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="12dp"
+        android:drawableTint="#9E9E9E"
+        android:inputType="text"
+        android:elevation="4dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"/>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -68,37 +87,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="20dp">
 
-            <!-- ── Buscador Estilizado ── -->
-            <EditText
-                android:id="@+id/etBuscar"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:background="@drawable/bg_input_rounded"
-                android:backgroundTint="@color/happybox_secondary"
-                android:hint="@string/hintBuscar"
-                android:textColorHint="#9E9E9E"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:drawableStart="@drawable/ic_search"
-                android:drawablePadding="12dp"
-                android:drawableTint="#9E9E9E"
-                android:inputType="text"
-                android:layout_marginBottom="24dp"
-                android:elevation="0dp"/>
-
-            <!-- ── Título Categorías ── -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/titleCategorias"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
-                android:layout_marginBottom="12dp"/>
-
-            <!-- ── Barra de Chips de Categorías ── -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -112,7 +105,6 @@
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp">
 
-                    <!-- Chip: Detalles -->
                     <com.google.android.material.chip.Chip
                         android:id="@+id/cardDetalles"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
@@ -126,9 +118,8 @@
                         app:chipIconTint="@color/white"
                         app:chipIconVisible="true"
                         android:checkable="false"
-                        android:layout_margin="4dp"/>
+                        android:layout_margin="0dp"/>
 
-                    <!-- Chip: Globos -->
                     <com.google.android.material.chip.Chip
                         android:id="@+id/cardGlobos"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
@@ -144,7 +135,6 @@
                         android:checkable="false"
                         android:layout_margin="4dp"/>
 
-                    <!-- Chip: Peluches -->
                     <com.google.android.material.chip.Chip
                         android:id="@+id/cardPeluches"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
@@ -160,7 +150,6 @@
                         android:checkable="false"
                         android:layout_margin="4dp"/>
 
-                    <!-- Chip: Regalos -->
                     <com.google.android.material.chip.Chip
                         android:id="@+id/cardRegalos"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
@@ -176,7 +165,6 @@
                         android:checkable="false"
                         android:layout_margin="4dp"/>
 
-                    <!-- Chip: Tazas -->
                     <com.google.android.material.chip.Chip
                         android:id="@+id/cardTazas"
                         style="@style/Widget.MaterialComponents.Chip.Filter"
@@ -195,8 +183,41 @@
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Para ti"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="10dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSugeridos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Explora"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="10dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTodosProductos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="8dp"/>
+
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- ── Bottom Navigation ── -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
