@@ -20,8 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import mx.edu.itson.happybox.DetailActivity
 import mx.edu.itson.happybox.MainHostActivity
 import mx.edu.itson.happybox.R
-import mx.edu.itson.happybox.adapter.ProductoListaAdapter
-import mx.edu.itson.happybox.adapter.ProductoSugeridoAdapter
+import mx.edu.itson.happybox.adapter.ProductoRecyclerAdapter
 import mx.edu.itson.happybox.model.Producto
 import mx.edu.itson.happybox.model.ProductoSeeder
 
@@ -42,7 +41,7 @@ class HomeFragment : Fragment() {
     private lateinit var db: FirebaseFirestore
 
     private var listaCompleta: List<Producto> = emptyList()
-    private var adapterLista: ProductoListaAdapter? = null
+    private var adapterLista: ProductoRecyclerAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -144,15 +143,17 @@ class HomeFragment : Fragment() {
 
                     listaCompleta = disponibles.sortedBy { it.nombre }
 
-                    rvSugeridos.adapter = ProductoSugeridoAdapter(
+                    rvSugeridos.adapter = ProductoRecyclerAdapter(
                         context  = requireContext(),
                         productos = disponibles.shuffled().take(6),
+                        isHorizontal = true,
                         onClick  = { irADetalle(it) }
                     )
 
-                    adapterLista = ProductoListaAdapter(
+                    adapterLista = ProductoRecyclerAdapter(
                         context  = requireContext(),
                         productos = listaCompleta.toMutableList(),
+                        isHorizontal = false,
                         onClick  = { irADetalle(it) }
                     )
                     rvTodosProductos.adapter = adapterLista
@@ -174,9 +175,10 @@ class HomeFragment : Fragment() {
             listaCompleta.filter { it.categoria == categoria }
         }
 
-        adapterLista = ProductoListaAdapter(
+        adapterLista = ProductoRecyclerAdapter(
             context  = requireContext(),
             productos = filtrada.toMutableList(),
+            isHorizontal = false,
             onClick  = { irADetalle(it) }
         )
         rvTodosProductos.adapter = adapterLista

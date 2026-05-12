@@ -15,8 +15,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import mx.edu.itson.happybox.adapter.ProductoListaAdapter
-import mx.edu.itson.happybox.adapter.ProductoSugeridoAdapter
+import mx.edu.itson.happybox.adapter.ProductoRecyclerAdapter
 import mx.edu.itson.happybox.model.Producto
 import mx.edu.itson.happybox.model.ProductoSeeder
 
@@ -38,7 +37,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
 
     private var listaCompleta: List<Producto> = emptyList()
-    private var adapterLista: ProductoListaAdapter? = null
+    private var adapterLista: ProductoRecyclerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,15 +125,17 @@ class HomeActivity : AppCompatActivity() {
 
                     listaCompleta = disponibles.sortedBy { it.nombre }
 
-                    rvSugeridos.adapter = ProductoSugeridoAdapter(
-                        context  = this,
+                    rvSugeridos.adapter = ProductoRecyclerAdapter(
+                        context  = this@HomeActivity,
                         productos = disponibles.shuffled().take(6),
+                        isHorizontal = true,
                         onClick  = { irADetalle(it) }
                     )
 
-                    adapterLista = ProductoListaAdapter(
-                        context  = this,
+                    adapterLista = ProductoRecyclerAdapter(
+                        context  = this@HomeActivity,
                         productos = listaCompleta.toMutableList(),
+                        isHorizontal = false,
                         onClick  = { irADetalle(it) }
                     )
                     rvTodosProductos.adapter = adapterLista
@@ -155,9 +156,10 @@ class HomeActivity : AppCompatActivity() {
             listaCompleta.filter { it.categoria == categoria }
         }
 
-        adapterLista = ProductoListaAdapter(
+        adapterLista = ProductoRecyclerAdapter(
             context  = this,
             productos = filtrada.toMutableList(),
+            isHorizontal = false,
             onClick  = { irADetalle(it) }
         )
         rvTodosProductos.adapter = adapterLista
