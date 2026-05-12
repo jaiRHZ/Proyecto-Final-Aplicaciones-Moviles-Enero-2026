@@ -17,6 +17,7 @@ import mx.edu.itson.happybox.adapter.ProductoAdapter
 import mx.edu.itson.happybox.model.CarritoManager
 import mx.edu.itson.happybox.model.Producto
 import mx.edu.itson.happybox.model.ProductoSeeder
+import mx.edu.itson.happybox.utils.BadgeUtils
 
 class ProductosActivity : AppCompatActivity() {
 
@@ -59,6 +60,11 @@ class ProductosActivity : AppCompatActivity() {
         ProductoSeeder.sembrar(db) {
             cargarProductosDesdeFirestore()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        BadgeUtils.actualizarBadgeCarrito(bottomNav)
     }
 
     private fun inicializarVistas() {

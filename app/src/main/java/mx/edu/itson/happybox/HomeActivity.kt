@@ -19,6 +19,7 @@ import mx.edu.itson.happybox.adapter.ProductoListaAdapter
 import mx.edu.itson.happybox.adapter.ProductoSugeridoAdapter
 import mx.edu.itson.happybox.model.Producto
 import mx.edu.itson.happybox.model.ProductoSeeder
+import mx.edu.itson.happybox.utils.BadgeUtils
 
 class HomeActivity : AppCompatActivity() {
 
@@ -55,6 +56,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         cargarInicialesUsuario()
+        BadgeUtils.actualizarBadgeCarrito(bottomNav)
     }
 
     private fun inicializarVistas() {

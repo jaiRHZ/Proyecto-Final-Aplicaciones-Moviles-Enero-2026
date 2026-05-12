@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import mx.edu.itson.happybox.adapter.CarritoAdapter
 import mx.edu.itson.happybox.model.ItemCarrito
 import mx.edu.itson.happybox.model.Producto
+import mx.edu.itson.happybox.utils.BadgeUtils
 
 class CarritoActivity : AppCompatActivity() {
 
@@ -47,6 +48,7 @@ class CarritoActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         cargarCarrito()
+        BadgeUtils.actualizarBadgeCarrito(bottomNav)
     }
 
     private fun inicializarVistas() {

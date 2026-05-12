@@ -13,6 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import mx.edu.itson.happybox.utils.BadgeUtils
 
 class PerfilActivity : AppCompatActivity() {
 
@@ -54,6 +55,7 @@ class PerfilActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         cargarDatosUsuario()
+        BadgeUtils.actualizarBadgeCarrito(bottomNav)
     }
 
     private fun inicializarVistas() {
