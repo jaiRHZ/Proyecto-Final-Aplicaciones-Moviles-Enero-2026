@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:background="@color/background_screen">
 
-    <!-- ── Toolbar Personalizada ── -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarHome"
         android:layout_width="match_parent"
@@ -46,19 +45,51 @@
                     android:clickable="true"
                     android:focusable="true"/>
 
-                <ImageView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/ivProfile"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/ic_person"
-                    app:tint="@color/white"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:strokeWidth="0dp"
                     android:clickable="true"
-                    android:focusable="true"/>
+                    android:focusable="true">
+                    <TextView
+                        android:id="@+id/tvHomeIniciales"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="?"
+                        android:textColor="@color/happybox_primary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <ScrollView
+    <EditText
+        android:id="@+id/etBuscar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_input_rounded"
+        android:backgroundTint="@color/happybox_secondary"
+        android:hint="@string/hintBuscar"
+        android:textColorHint="#9E9E9E"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="12dp"
+        android:drawableTint="#9E9E9E"
+        android:inputType="text"
+        android:elevation="4dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"/>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -68,207 +99,163 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="20dp">
 
-            <!-- ── Buscador Estilizado ── -->
-            <EditText
-                android:id="@+id/etBuscar"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:background="@drawable/bg_input_rounded"
-                android:backgroundTint="@color/happybox_secondary"
-                android:hint="@string/hintBuscar"
-                android:textColorHint="#9E9E9E"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:drawableStart="@drawable/ic_search"
-                android:drawablePadding="12dp"
-                android:drawableTint="#9E9E9E"
-                android:inputType="text"
-                android:layout_marginBottom="24dp"
-                android:elevation="0dp"/>
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginBottom="16dp">
 
-            <!-- ── Título Categorías ── -->
+                <com.google.android.material.chip.ChipGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipTodos"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Todos"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
+                        app:chipIconVisible="false"
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
+                        android:checked="true"
+                        android:layout_margin="4dp"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/cardDetalles"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/catDetalles"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
+                        app:chipIcon="@android:drawable/btn_star_big_on"
+                        app:chipIconTint="@color/chip_text_selector"
+                        app:chipIconVisible="true"
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
+                        android:layout_margin="4dp"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/cardGlobos"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/catGlobos"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
+                        app:chipIcon="@android:drawable/ic_menu_send"
+                        app:chipIconTint="@color/chip_text_selector"
+                        app:chipIconVisible="true"
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
+                        android:layout_margin="4dp"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/cardPeluches"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/catPeluches"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
+                        app:chipIcon="@android:drawable/btn_star_big_off"
+                        app:chipIconTint="@color/chip_text_selector"
+                        app:chipIconVisible="true"
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
+                        android:layout_margin="4dp"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/cardRegalos"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/catRegalos"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
+                        app:chipIcon="@android:drawable/ic_menu_view"
+                        app:chipIconTint="@color/chip_text_selector"
+                        app:chipIconVisible="true"
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
+                        android:layout_margin="4dp"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/cardTazas"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/catTazas"
+                        android:textColor="@color/chip_text_selector"
+                        app:chipBackgroundColor="@color/chip_bg_selector"
+                        app:chipStrokeColor="@color/chip_stroke_selector"
+                        app:chipStrokeWidth="1.5dp"
+                        app:chipIcon="@android:drawable/ic_menu_compass"
+                        app:chipIconTint="@color/chip_text_selector"
+                        app:chipIconVisible="true"
+                        app:checkedIconVisible="false"
+                        android:checkable="true"
+                        android:layout_margin="4dp"/>
+
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/titleCategorias"
+                android:text="Para ti"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary"
-                android:layout_marginBottom="16dp"/>
-
-            <!-- ── Grid de Categorías con Diseño de la Imagen ── -->
-            <GridLayout
+                android:layout_marginBottom="10dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSugeridos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:alignmentMode="alignMargins">
+                android:clipToPadding="false"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_marginBottom="16dp"/>
 
-                <!-- Detalles (Sparkles) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardDetalles"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_category_card"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/btn_star_big_on"
-                            app:tint="@color/white"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/catDetalles"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Explora"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="10dp"/>
 
-                <!-- Globos (Party) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardGlobos"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_category_card"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/ic_menu_send"
-                            app:tint="@color/white"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/catGlobos"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Peluches (Heart) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardPeluches"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_category_card"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/btn_star_big_off"
-                            app:tint="@color/white"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/catPeluches"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Regalos (Gift) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardRegalos"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_category_card"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/ic_menu_view"
-                            app:tint="@color/white"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/catRegalos"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Tazas (Coffee) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardTazas"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_category_card"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/ic_menu_compass"
-                            app:tint="@color/white"
-                            android:layout_marginBottom="8dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/catTazas"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-            </GridLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTodosProductos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="8dp"/>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- ── Bottom Navigation ── -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

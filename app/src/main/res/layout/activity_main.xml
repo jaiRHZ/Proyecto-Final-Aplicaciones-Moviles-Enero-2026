@@ -35,7 +35,7 @@
                 android:id="@+id/imgLogo"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_launcher_foreground"
+                android:src="@drawable/img"
                 android:contentDescription="Happy Box Logo"
                 android:layout_gravity="center" />
 
@@ -66,11 +66,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="32dp"
+                android:backgroundTint="#E8357A"
                 android:text="Iniciar Sesión"
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:backgroundTint="#E8357A"
                 app:cornerRadius="12dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -83,9 +83,9 @@
                 android:textColor="#E8357A"
                 android:textSize="15sp"
                 android:textStyle="bold"
+                app:cornerRadius="12dp"
                 app:strokeColor="#E8357A"
-                app:strokeWidth="1.5dp"
-                app:cornerRadius="12dp" />
+                app:strokeWidth="1.5dp" />
 
             <TextView
                 android:id="@+id/tvOlvidaste"

@@ -35,7 +35,7 @@
                 android:id="@+id/imgLogo"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
-                android:src="@drawable/ic_launcher_foreground"
+                android:src="@drawable/img"
                 android:contentDescription="Happy Box Logo"
                 android:layout_gravity="center" />
 

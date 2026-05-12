@@ -2,17 +2,21 @@ package mx.edu.itson.happybox
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.firebase.firestore.FirebaseFirestore
 import mx.edu.itson.happybox.adapter.ProductoAdapter
 import mx.edu.itson.happybox.model.CarritoManager
 import mx.edu.itson.happybox.model.Producto
+import mx.edu.itson.happybox.model.ProductoSeeder
 
 class ProductosActivity : AppCompatActivity() {
 
@@ -25,11 +29,13 @@ class ProductosActivity : AppCompatActivity() {
     private lateinit var chipNombre: Chip
     private lateinit var listViewProductos: ListView
     private lateinit var bottomNav: BottomNavigationView
+    private lateinit var progressBar: ProgressBar
 
     // ── Datos ────────────────────────────────────────────────
     private var listaOriginal: List<Producto> = emptyList()
     private var listaFiltrada: MutableList<Producto> = mutableListOf()
     private lateinit var adapter: ProductoAdapter
+    private lateinit var db: FirebaseFirestore
 
     private var categoria: String? = null
     private var query: String? = null
@@ -38,16 +44,21 @@ class ProductosActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_productos)
 
-        // Leer datos del Intent
         categoria = intent.getStringExtra("categoria")
         query     = intent.getStringExtra("query")
 
+        db = FirebaseFirestore.getInstance()
+
         inicializarVistas()
         configurarToolbar()
-        cargarProductos()
         configurarListView()
         configurarChips()
         configurarBottomNav()
+
+        // Sembrar productos si es la primera vez, luego cargar desde Firestore
+        ProductoSeeder.sembrar(db) {
+            cargarProductosDesdeFirestore()
+        }
     }
 
     private fun inicializarVistas() {
@@ -59,17 +70,17 @@ class ProductosActivity : AppCompatActivity() {
         chipNombre        = findViewById(R.id.chipNombre)
         listViewProductos = findViewById(R.id.listViewProductos)
         bottomNav         = findViewById(R.id.bottomNavProductos)
+        progressBar       = findViewById(R.id.progressBarProductos)
     }
 
     private fun configurarToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            // Si hay búsqueda, mostrar "Resultados", si no, la categoría
             title = when {
-                query != null -> "Resultados: $query"
+                query != null     -> "Resultados: $query"
                 categoria != null -> categoria
-                else -> "Productos"
+                else              -> "Productos"
             }
         }
         toolbar.setNavigationOnClickListener {
@@ -77,31 +88,37 @@ class ProductosActivity : AppCompatActivity() {
         }
     }
 
-    private fun cargarProductos() {
-        // 1. Obtener la base de datos (por ahora simulada con todas las categorías)
-        val todosLosProductos = obtenerTodosLosProductos()
+    private fun cargarProductosDesdeFirestore() {
+        progressBar.visibility = View.VISIBLE
 
-        // 2. Aplicar filtros iniciales según lo que se recibió
-        listaOriginal = when {
-            query != null -> {
-                // Filtro por búsqueda de texto
-                todosLosProductos.filter { 
-                    it.nombre.contains(query!!, ignoreCase = true) || 
-                    it.descripcion.contains(query!!, ignoreCase = true)
+        db.collection("productos")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val todos = snapshot.documents.mapNotNull { it.toObject(Producto::class.java) }
+
+                listaOriginal = when {
+                    query != null     -> todos.filter {
+                        it.nombre.contains(query!!, ignoreCase = true) ||
+                        it.descripcion.contains(query!!, ignoreCase = true)
+                    }
+                    categoria != null -> todos.filter { it.categoria == categoria }
+                    else              -> todos
                 }
-            }
-            categoria != null -> {
-                // Filtro por categoría
-                todosLosProductos.filter { it.categoria == categoria }
-            }
-            else -> todosLosProductos
-        }
 
-        if (listaOriginal.isEmpty()) {
-            Toast.makeText(this, getString(R.string.toastListaVacia), Toast.LENGTH_SHORT).show()
-        }
+                listaFiltrada.clear()
+                listaFiltrada.addAll(listaOriginal)
+                adapter.notifyDataSetChanged()
 
-        listaFiltrada = listaOriginal.toMutableList()
+                if (listaOriginal.isEmpty()) {
+                    Toast.makeText(this, getString(R.string.toastListaVacia), Toast.LENGTH_SHORT).show()
+                }
+
+                progressBar.visibility = View.GONE
+            }
+            .addOnFailureListener { e ->
+                progressBar.visibility = View.GONE
+                Toast.makeText(this, "Error al cargar productos: ${e.message}", Toast.LENGTH_LONG).show()
+            }
     }
 
     private fun configurarListView() {
@@ -110,8 +127,7 @@ class ProductosActivity : AppCompatActivity() {
 
         listViewProductos.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
-                val productoSeleccionado = listaFiltrada[position]
-                irADetalle(productoSeleccionado)
+                irADetalle(listaFiltrada[position])
             }
     }
 
@@ -155,24 +171,22 @@ class ProductosActivity : AppCompatActivity() {
         chipNombre.isChecked     = false
     }
 
+    private fun navegarA(destino: Class<*>) {
+        startActivity(Intent(this, destino).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        })
+        finish()
+    }
+
     private fun configurarBottomNav() {
         bottomNav.selectedItemId = R.id.navBuscar
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navInicio -> {
-                    finish()
-                    true
-                }
-                R.id.navBuscar -> true
-                R.id.navCarrito -> {
-                    startActivity(Intent(this, CarritoActivity::class.java))
-                    true
-                }
-                R.id.navPerfil -> {
-                    startActivity(Intent(this, PerfilActivity::class.java))
-                    true
-                }
+                R.id.navInicio  -> { navegarA(HomeActivity::class.java);    true }
+                R.id.navBuscar  -> true
+                R.id.navCarrito -> { navegarA(CarritoActivity::class.java); true }
+                R.id.navPerfil  -> { navegarA(PerfilActivity::class.java);  true }
                 else -> false
             }
         }
@@ -187,45 +201,5 @@ class ProductosActivity : AppCompatActivity() {
             putExtra("productoImagenRes",   producto.imagenResId)
         }
         startActivity(intent)
-    }
-
-    private fun obtenerTodosLosProductos(): List<Producto> {
-        val categorias = listOf("Peluches", "Globos", "Tazas", "Detalles", "Regalos")
-        val listaCompleta = mutableListOf<Producto>()
-        
-        categorias.forEach { cat ->
-            listaCompleta.addAll(obtenerProductosPorCategoria(cat))
-        }
-        return listaCompleta
-    }
-
-    private fun obtenerProductosPorCategoria(cat: String): List<Producto> {
-        return when (cat) {
-            "Peluches" -> listOf(
-                Producto(1, "Osito de peluche mediano",  249.00, cat, "Peluche suave de 30 cm ideal para regalar."),
-                Producto(2, "Conejo suave grande",        320.00, cat, "Conejo esponjoso de 45 cm con lazo."),
-                Producto(3, "Perrito de peluche",         199.00, cat, "Perrito tierno de 25 cm, muy suave al tacto."),
-                Producto(4, "Oso panda gigante",          580.00, cat, "Panda de 60 cm, perfecto para sorprender.")
-            )
-            "Globos" -> listOf(
-                Producto(5, "Globo personalizado",         85.00, cat, "Globo metálico con tu mensaje impreso."),
-                Producto(6, "Set de globos cumpleaños",   150.00, cat, "12 globos de colores con listón."),
-                Producto(7, "Globo figura corazón",       120.00, cat, "Globo en forma de corazón, color rosa.")
-            )
-            "Tazas" -> listOf(
-                Producto(8,  "Taza personalizada 11oz",   180.00, cat, "Taza blanca con foto o mensaje."),
-                Producto(9,  "Taza mágica",               220.00, cat, "Cambia de color al servir líquido caliente."),
-                Producto(10, "Taza tipo termo",           350.00, cat, "Mantiene la temperatura por 6 horas.")
-            )
-            "Detalles" -> listOf(
-                Producto(11, "Caja de chocolates",        260.00, cat, "Surtido de 12 chocolates artesanales."),
-                Producto(12, "Vela aromática",            140.00, cat, "Vela de soja con aroma a vainilla.")
-            )
-            "Regalos" -> listOf(
-                Producto(13, "Set de spa relax",          480.00, cat, "Incluye sales de baño, vela y mascarilla."),
-                Producto(14, "Canasta gourmet",           650.00, cat, "Canasta con productos gourmet selectos.")
-            )
-            else -> emptyList()
-        }
     }
 }

@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HappyBox">
         <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CrearResenaActivity"
+            android:exported="false" />
+        <activity
             android:name=".EditarNombreActivity"
             android:exported="false" />
         <activity
@@ -31,9 +37,24 @@
             android:label="@string/titlePerfil"
             android:theme="@style/Theme.HappyBox.NoActionBar" />
         <activity
+            android:name=".MisDireccionesActivity"
+            android:exported="false"
+            android:label="Mis Direcciones"
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
+        <activity
+            android:name=".FormularioDomicilioActivity"
+            android:exported="false"
+            android:label="Registrar Domicilio"
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
+        <activity
             android:name=".MisPedidosActivity"
             android:exported="false"
             android:label="@string/optionMisPedidos"
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
+        <activity
+            android:name=".MisResenasActivity"
+            android:exported="false"
+            android:label="@string/optionResenas"
             android:theme="@style/Theme.HappyBox.NoActionBar" />
         <activity
             android:name=".DetailActivity"

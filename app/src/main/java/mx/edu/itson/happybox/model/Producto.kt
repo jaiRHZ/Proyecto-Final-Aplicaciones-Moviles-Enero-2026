@@ -1,13 +1,14 @@
 package mx.edu.itson.happybox.model
 
+import com.google.firebase.firestore.Exclude
+
 data class Producto(
-    val id: Int,
-    val nombre: String,
-    val precio: Double,
-    val categoria: String,
-    val descripcion: String,
+    val id: Int = 0,
+    val nombre: String = "",
+    val precio: Double = 0.0,
+    val categoria: String = "",
+    val descripcion: String = "",
     val disponible: Boolean = true,
-    // En un proyecto real aquí iría la URL de la imagen.
-    // Por ahora usamos un resource ID de drawable.
-    val imagenResId: Int = 0
+    // Recurso local: Firestore lo ignora, se asigna en memoria
+    @get:Exclude val imagenResId: Int = 0
 )
