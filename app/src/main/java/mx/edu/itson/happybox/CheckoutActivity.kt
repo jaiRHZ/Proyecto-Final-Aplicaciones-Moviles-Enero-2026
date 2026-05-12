@@ -48,6 +48,7 @@ class CheckoutActivity : AppCompatActivity() {
     private var domicilioSeleccionado: Domicilio? = null
     private var metodoPagoSeleccionado: String = ""
     private var totalPagar: Double = 0.0
+    private var isDirectBuy: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +56,7 @@ class CheckoutActivity : AppCompatActivity() {
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+        isDirectBuy = intent.getBooleanExtra("isDirectBuy", false)
 
         inicializarVistas()
         configurarMetodosPago()
@@ -136,6 +138,23 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun cargarCarrito() {
+        if (isDirectBuy) {
+            val productoId = intent.getIntExtra("productoId", -1)
+            val nombre = intent.getStringExtra("productoNombre") ?: "Producto"
+            val precio = intent.getDoubleExtra("productoPrecio", 0.0)
+            val imagenRes = intent.getIntExtra("productoImagenRes", R.drawable.ic_placeholder_producto)
+            val cantidad = intent.getIntExtra("cantidad", 1)
+
+            if (productoId != -1) {
+                val producto = Producto(id = productoId, nombre = nombre, precio = precio, imagenResId = imagenRes)
+                listaItems.clear()
+                listaItems.add(ItemCarrito(producto, cantidad))
+                adapter.updateItems(listaItems)
+                calcularTotal()
+            }
+            return
+        }
+
         val uid = auth.currentUser?.uid ?: return
         db.collection("usuarios").document(uid).collection("carrito")
             .get()
@@ -234,6 +253,11 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun vaciarCarrito(uid: String) {
+        if (isDirectBuy) {
+            mostrarModalAgradecimiento()
+            return
+        }
+
         db.collection("usuarios").document(uid).collection("carrito")
             .get()
             .addOnSuccessListener { result ->

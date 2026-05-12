@@ -184,7 +184,21 @@ class DetailActivity : AppCompatActivity() {
         }
 
         btnBuyNow.setOnClickListener {
-            Toast.makeText(this, "Procediendo a la compra", Toast.LENGTH_SHORT).show()
+            val uid = auth.currentUser?.uid
+            if (uid == null) {
+                Toast.makeText(this, "Inicia sesión para comprar", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            
+            val intent = Intent(this, CheckoutActivity::class.java).apply {
+                putExtra("isDirectBuy", true)
+                putExtra("productoId", productoId)
+                putExtra("productoNombre", tvTitle.text.toString())
+                putExtra("productoPrecio", tvPrice.text.toString().replace("$", "").toDoubleOrNull() ?: 0.0)
+                putExtra("productoImagenRes", this@DetailActivity.intent.getIntExtra("productoImagenRes", R.drawable.ic_placeholder_producto))
+                putExtra("cantidad", cantidad)
+            }
+            startActivity(intent)
         }
     }
 
