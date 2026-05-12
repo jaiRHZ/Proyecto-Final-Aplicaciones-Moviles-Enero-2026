@@ -14,9 +14,7 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
-        <activity
-            android:name=".CrearResenaActivity"
-            android:exported="false" />
+
         <activity
             android:name=".EditarNombreActivity"
             android:exported="false" />
