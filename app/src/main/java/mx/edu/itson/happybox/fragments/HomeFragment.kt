@@ -1,27 +1,31 @@
-package mx.edu.itson.happybox
+package mx.edu.itson.happybox.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import mx.edu.itson.happybox.DetailActivity
+import mx.edu.itson.happybox.MainHostActivity
+import mx.edu.itson.happybox.R
 import mx.edu.itson.happybox.adapter.ProductoListaAdapter
 import mx.edu.itson.happybox.adapter.ProductoSugeridoAdapter
 import mx.edu.itson.happybox.model.Producto
 import mx.edu.itson.happybox.model.ProductoSeeder
-import mx.edu.itson.happybox.utils.BadgeUtils
 
-class HomeActivity : AppCompatActivity() {
+class HomeFragment : Fragment() {
 
     private lateinit var etBuscar: EditText
     private lateinit var chipTodos: Chip
@@ -30,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var cardTazas: Chip
     private lateinit var cardDetalles: Chip
     private lateinit var cardRegalos: Chip
-    private lateinit var bottomNav: BottomNavigationView
     private lateinit var ivCart: ImageView
     private lateinit var ivProfile: MaterialCardView
     private lateinit var tvHomeIniciales: TextView
@@ -41,14 +44,18 @@ class HomeActivity : AppCompatActivity() {
     private var listaCompleta: List<Producto> = emptyList()
     private var adapterLista: ProductoListaAdapter? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_home, container, false)
+    }
 
-        inicializarVistas()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        inicializarVistas(view)
         configurarClickListeners()
         configurarBuscador()
-        configurarBottomNav()
         cargarProductos()
         cargarInicialesUsuario()
     }
@@ -56,23 +63,21 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         cargarInicialesUsuario()
-        BadgeUtils.actualizarBadgeCarrito(bottomNav)
     }
 
-    private fun inicializarVistas() {
-        etBuscar         = findViewById(R.id.etBuscar)
-        chipTodos        = findViewById(R.id.chipTodos)
-        cardPeluches     = findViewById<Chip>(R.id.cardPeluches)
-        cardGlobos       = findViewById<Chip>(R.id.cardGlobos)
-        cardTazas        = findViewById<Chip>(R.id.cardTazas)
-        cardDetalles     = findViewById<Chip>(R.id.cardDetalles)
-        cardRegalos      = findViewById<Chip>(R.id.cardRegalos)
-        bottomNav        = findViewById(R.id.bottomNavHome)
-        ivCart           = findViewById(R.id.ivCart)
-        ivProfile        = findViewById(R.id.ivProfile)
-        tvHomeIniciales  = findViewById(R.id.tvHomeIniciales)
-        rvSugeridos      = findViewById(R.id.rvSugeridos)
-        rvTodosProductos = findViewById(R.id.rvTodosProductos)
+    private fun inicializarVistas(view: View) {
+        etBuscar         = view.findViewById(R.id.etBuscar)
+        chipTodos        = view.findViewById(R.id.chipTodos)
+        cardPeluches     = view.findViewById<Chip>(R.id.cardPeluches)
+        cardGlobos       = view.findViewById<Chip>(R.id.cardGlobos)
+        cardTazas        = view.findViewById<Chip>(R.id.cardTazas)
+        cardDetalles     = view.findViewById<Chip>(R.id.cardDetalles)
+        cardRegalos      = view.findViewById<Chip>(R.id.cardRegalos)
+        ivCart           = view.findViewById(R.id.ivCart)
+        ivProfile        = view.findViewById(R.id.ivProfile)
+        tvHomeIniciales  = view.findViewById(R.id.tvHomeIniciales)
+        rvSugeridos      = view.findViewById(R.id.rvSugeridos)
+        rvTodosProductos = view.findViewById(R.id.rvTodosProductos)
         db               = FirebaseFirestore.getInstance()
     }
 
@@ -85,11 +90,17 @@ class HomeActivity : AppCompatActivity() {
         cardTazas.setOnClickListener    { filtrarPorCategoria("Tazas") }
 
         ivCart.setOnClickListener {
-            startActivity(Intent(this, CarritoActivity::class.java))
+            val activity = requireActivity()
+            if (activity is MainHostActivity) {
+                activity.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavHost).selectedItemId = R.id.navCarrito
+            }
         }
 
         ivProfile.setOnClickListener {
-            startActivity(Intent(this, PerfilActivity::class.java))
+            val activity = requireActivity()
+            if (activity is MainHostActivity) {
+                activity.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavHost).selectedItemId = R.id.navPerfil
+            }
         }
     }
 
@@ -98,7 +109,19 @@ class HomeActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
                 val consulta = etBuscar.text.toString().trim()
                 if (consulta.isNotEmpty()) {
-                    irAProductos(query = consulta)
+                    val activity = requireActivity()
+                    if (activity is MainHostActivity) {
+                        // Navegar a ProductosFragment y pasarle la consulta
+                        val fragment = ProductosFragment().apply {
+                            arguments = Bundle().apply {
+                                putString("query", consulta)
+                            }
+                        }
+                        activity.supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .commit()
+                        activity.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavHost).selectedItemId = R.id.navBuscar
+                    }
                 }
                 true
             } else {
@@ -107,16 +130,9 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun irAProductos(categoria: String? = null, query: String? = null) {
-        val intent = Intent(this, ProductosActivity::class.java)
-        categoria?.let { intent.putExtra("categoria", it) }
-        query?.let { intent.putExtra("query", it) }
-        startActivity(intent)
-    }
     private fun cargarProductos() {
-        rvSugeridos.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rvTodosProductos.layoutManager = GridLayoutManager(this, 2)
+        rvSugeridos.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        rvTodosProductos.layoutManager = GridLayoutManager(requireContext(), 2)
 
         ProductoSeeder.sembrar(db) {
             db.collection("productos")
@@ -129,13 +145,13 @@ class HomeActivity : AppCompatActivity() {
                     listaCompleta = disponibles.sortedBy { it.nombre }
 
                     rvSugeridos.adapter = ProductoSugeridoAdapter(
-                        context  = this,
+                        context  = requireContext(),
                         productos = disponibles.shuffled().take(6),
                         onClick  = { irADetalle(it) }
                     )
 
                     adapterLista = ProductoListaAdapter(
-                        context  = this,
+                        context  = requireContext(),
                         productos = listaCompleta.toMutableList(),
                         onClick  = { irADetalle(it) }
                     )
@@ -143,6 +159,7 @@ class HomeActivity : AppCompatActivity() {
                 }
         }
     }
+
     private fun filtrarPorCategoria(categoria: String?) {
         chipTodos.isChecked    = (categoria == null)
         cardDetalles.isChecked = (categoria == "Detalles")
@@ -158,7 +175,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         adapterLista = ProductoListaAdapter(
-            context  = this,
+            context  = requireContext(),
             productos = filtrada.toMutableList(),
             onClick  = { irADetalle(it) }
         )
@@ -189,7 +206,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun irADetalle(producto: Producto) {
-        val intent = Intent(this, DetailActivity::class.java).apply {
+        val intent = Intent(requireContext(), DetailActivity::class.java).apply {
             putExtra("productoId",          producto.id)
             putExtra("productoNombre",      producto.nombre)
             putExtra("productoPrecio",      producto.precio)
@@ -197,26 +214,5 @@ class HomeActivity : AppCompatActivity() {
             putExtra("productoImagenRes",   producto.imagenResId)
         }
         startActivity(intent)
-    }
-
-    private fun navegarA(destino: Class<*>) {
-        startActivity(Intent(this, destino).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        })
-        finish()
-    }
-
-    private fun configurarBottomNav() {
-        bottomNav.selectedItemId = R.id.navInicio
-
-        bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navInicio  -> true
-                R.id.navBuscar  -> { navegarA(ProductosActivity::class.java); true }
-                R.id.navCarrito -> { navegarA(CarritoActivity::class.java);   true }
-                R.id.navPerfil  -> { navegarA(PerfilActivity::class.java);    true }
-                else -> false
-            }
-        }
     }
 }

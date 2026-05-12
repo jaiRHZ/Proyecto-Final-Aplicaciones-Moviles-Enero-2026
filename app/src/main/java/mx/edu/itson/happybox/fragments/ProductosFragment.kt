@@ -1,27 +1,27 @@
-package mx.edu.itson.happybox
+package mx.edu.itson.happybox.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.fragment.app.Fragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.firebase.firestore.FirebaseFirestore
+import mx.edu.itson.happybox.DetailActivity
+import mx.edu.itson.happybox.R
 import mx.edu.itson.happybox.adapter.ProductoAdapter
-import mx.edu.itson.happybox.model.CarritoManager
 import mx.edu.itson.happybox.model.Producto
 import mx.edu.itson.happybox.model.ProductoSeeder
-import mx.edu.itson.happybox.utils.BadgeUtils
 
-class ProductosActivity : AppCompatActivity() {
+class ProductosFragment : Fragment() {
 
-    // ── Vistas ──────────────────────────────────────────────
     private lateinit var toolbar: Toolbar
     private lateinit var chipGroup: ChipGroup
     private lateinit var chipTodos: Chip
@@ -29,10 +29,8 @@ class ProductosActivity : AppCompatActivity() {
     private lateinit var chipPrecioDesc: Chip
     private lateinit var chipNombre: Chip
     private lateinit var listViewProductos: ListView
-    private lateinit var bottomNav: BottomNavigationView
     private lateinit var progressBar: ProgressBar
 
-    // ── Datos ────────────────────────────────────────────────
     private var listaOriginal: List<Producto> = emptyList()
     private var listaFiltrada: MutableList<Producto> = mutableListOf()
     private lateinit var adapter: ProductoAdapter
@@ -41,56 +39,57 @@ class ProductosActivity : AppCompatActivity() {
     private var categoria: String? = null
     private var query: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_productos)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_productos, container, false)
+    }
 
-        categoria = intent.getStringExtra("categoria")
-        query     = intent.getStringExtra("query")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        categoria = arguments?.getString("categoria")
+        query     = arguments?.getString("query")
 
         db = FirebaseFirestore.getInstance()
 
-        inicializarVistas()
+        inicializarVistas(view)
         configurarToolbar()
         configurarListView()
         configurarChips()
-        configurarBottomNav()
 
-        // Sembrar productos si es la primera vez, luego cargar desde Firestore
         ProductoSeeder.sembrar(db) {
             cargarProductosDesdeFirestore()
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        BadgeUtils.actualizarBadgeCarrito(bottomNav)
-    }
-
-    private fun inicializarVistas() {
-        toolbar           = findViewById(R.id.toolbarProductos)
-        chipGroup         = findViewById(R.id.chipGroupFiltros)
-        chipTodos         = findViewById(R.id.chipTodos)
-        chipPrecioAsc     = findViewById(R.id.chipPrecioAsc)
-        chipPrecioDesc    = findViewById(R.id.chipPrecioDesc)
-        chipNombre        = findViewById(R.id.chipNombre)
-        listViewProductos = findViewById(R.id.listViewProductos)
-        bottomNav         = findViewById(R.id.bottomNavProductos)
-        progressBar       = findViewById(R.id.progressBarProductos)
+    private fun inicializarVistas(view: View) {
+        toolbar           = view.findViewById(R.id.toolbarProductos)
+        chipGroup         = view.findViewById(R.id.chipGroupFiltros)
+        chipTodos         = view.findViewById(R.id.chipTodos)
+        chipPrecioAsc     = view.findViewById(R.id.chipPrecioAsc)
+        chipPrecioDesc    = view.findViewById(R.id.chipPrecioDesc)
+        chipNombre        = view.findViewById(R.id.chipNombre)
+        listViewProductos = view.findViewById(R.id.listViewProductos)
+        progressBar       = view.findViewById(R.id.progressBarProductos)
     }
 
     private fun configurarToolbar() {
-        setSupportActionBar(toolbar)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            title = when {
-                query != null     -> "Resultados: $query"
-                categoria != null -> categoria
-                else              -> "Productos"
-            }
+        toolbar.title = when {
+            query != null     -> "Resultados: $query"
+            categoria != null -> categoria
+            else              -> "Productos"
         }
+        // En fragmentos, ocultamos la flecha de atrás del toolbar ya que navegamos por el BottomNav,
+        // a menos que vengamos de una búsqueda específica. Si queremos, podemos configurarlo:
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
         toolbar.setNavigationOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            // Ir al Home fragment simulando un 'Atrás'
+            val activity = requireActivity()
+            if (activity is mx.edu.itson.happybox.MainHostActivity) {
+                activity.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavHost).selectedItemId = R.id.navInicio
+            }
         }
     }
 
@@ -100,6 +99,8 @@ class ProductosActivity : AppCompatActivity() {
         db.collection("productos")
             .get()
             .addOnSuccessListener { snapshot ->
+                if (!isAdded) return@addOnSuccessListener
+                
                 val todos = snapshot.documents.mapNotNull { it.toObject(Producto::class.java) }
 
                 listaOriginal = when {
@@ -116,19 +117,20 @@ class ProductosActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()
 
                 if (listaOriginal.isEmpty()) {
-                    Toast.makeText(this, getString(R.string.toastListaVacia), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toastListaVacia), Toast.LENGTH_SHORT).show()
                 }
 
                 progressBar.visibility = View.GONE
             }
             .addOnFailureListener { e ->
+                if (!isAdded) return@addOnFailureListener
                 progressBar.visibility = View.GONE
-                Toast.makeText(this, "Error al cargar productos: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Error al cargar productos: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 
     private fun configurarListView() {
-        adapter = ProductoAdapter(this, listaFiltrada)
+        adapter = ProductoAdapter(requireContext(), listaFiltrada)
         listViewProductos.adapter = adapter
 
         listViewProductos.onItemClickListener =
@@ -177,29 +179,8 @@ class ProductosActivity : AppCompatActivity() {
         chipNombre.isChecked     = false
     }
 
-    private fun navegarA(destino: Class<*>) {
-        startActivity(Intent(this, destino).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        })
-        finish()
-    }
-
-    private fun configurarBottomNav() {
-        bottomNav.selectedItemId = R.id.navBuscar
-
-        bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navInicio  -> { navegarA(HomeActivity::class.java);    true }
-                R.id.navBuscar  -> true
-                R.id.navCarrito -> { navegarA(CarritoActivity::class.java); true }
-                R.id.navPerfil  -> { navegarA(PerfilActivity::class.java);  true }
-                else -> false
-            }
-        }
-    }
-
     private fun irADetalle(producto: Producto) {
-        val intent = Intent(this, DetailActivity::class.java).apply {
+        val intent = Intent(requireContext(), DetailActivity::class.java).apply {
             putExtra("productoId",          producto.id)
             putExtra("productoNombre",      producto.nombre)
             putExtra("productoPrecio",      producto.precio)

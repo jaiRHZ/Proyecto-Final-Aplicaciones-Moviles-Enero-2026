@@ -1,21 +1,28 @@
-// app/src/main/java/mx/edu/itson/happybox/PerfilActivity.kt
-package mx.edu.itson.happybox
+package mx.edu.itson.happybox.fragments
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import mx.edu.itson.happybox.utils.BadgeUtils
+import mx.edu.itson.happybox.EditarNombreActivity
+import mx.edu.itson.happybox.MainActivity
+import mx.edu.itson.happybox.MainHostActivity
+import mx.edu.itson.happybox.MisDireccionesActivity
+import mx.edu.itson.happybox.MisPedidosActivity
+import mx.edu.itson.happybox.MisResenasActivity
+import mx.edu.itson.happybox.R
 
-class PerfilActivity : AppCompatActivity() {
+class PerfilFragment : Fragment() {
 
     private lateinit var btnBack: ImageButton
     private lateinit var optionMisPedidos: LinearLayout
@@ -23,7 +30,6 @@ class PerfilActivity : AppCompatActivity() {
     private lateinit var optionResenas: LinearLayout
     private lateinit var optionEditarPerfil: LinearLayout
     private lateinit var btnCerrarSesion: MaterialButton
-    private lateinit var bottomNav: BottomNavigationView
 
     private lateinit var tvInitials: TextView
     private lateinit var tvNombreUsuario: TextView
@@ -39,60 +45,65 @@ class PerfilActivity : AppCompatActivity() {
             }
         }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_perfil)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_perfil, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
         db   = FirebaseFirestore.getInstance()
 
-        inicializarVistas()
+        inicializarVistas(view)
         configurarListeners()
-        configurarBottomNav()
         cargarDatosUsuario()
     }
 
     override fun onResume() {
         super.onResume()
         cargarDatosUsuario()
-        BadgeUtils.actualizarBadgeCarrito(bottomNav)
     }
 
-    private fun inicializarVistas() {
-        btnBack              = findViewById(R.id.btnBackProfile)
-        optionMisPedidos     = findViewById(R.id.optionMisPedidos)
-        optionDirecciones    = findViewById(R.id.optionDirecciones)
-        optionResenas        = findViewById(R.id.optionResenas)
-        optionEditarPerfil   = findViewById(R.id.optionEditarPerfil)
-        btnCerrarSesion      = findViewById(R.id.btnCerrarSesion)
-        bottomNav            = findViewById(R.id.bottomNavPerfil)
+    private fun inicializarVistas(view: View) {
+        btnBack              = view.findViewById(R.id.btnBackProfile)
+        optionMisPedidos     = view.findViewById(R.id.optionMisPedidos)
+        optionDirecciones    = view.findViewById(R.id.optionDirecciones)
+        optionResenas        = view.findViewById(R.id.optionResenas)
+        optionEditarPerfil   = view.findViewById(R.id.optionEditarPerfil)
+        btnCerrarSesion      = view.findViewById(R.id.btnCerrarSesion)
 
-        tvInitials      = findViewById(R.id.tvInitials)
-        tvNombreUsuario = findViewById(R.id.tvNombreUsuario)
-        tvCorreoUsuario = findViewById(R.id.tvCorreoUsuario)
+        tvInitials      = view.findViewById(R.id.tvInitials)
+        tvNombreUsuario = view.findViewById(R.id.tvNombreUsuario)
+        tvCorreoUsuario = view.findViewById(R.id.tvCorreoUsuario)
+        
+        // En un fragmento principal, el botón de atrás no suele ser necesario
+        btnBack.visibility = View.GONE
     }
 
     private fun cargarDatosUsuario() {
         val usuario = auth.currentUser ?: return
 
-        // Correo directo desde FirebaseAuth
         tvCorreoUsuario.text = usuario.email ?: ""
 
-        // Nombre e iniciales desde Firestore
         db.collection("usuarios").document(usuario.uid)
             .get()
             .addOnSuccessListener { doc ->
+                if (!isAdded) return@addOnSuccessListener
                 val nombre = doc.getString("nombre") ?: ""
                 tvNombreUsuario.text = nombre
                 tvInitials.text = obtenerIniciales(nombre)
             }
             .addOnFailureListener {
+                if (!isAdded) return@addOnFailureListener
                 tvNombreUsuario.text = ""
                 tvInitials.text = "?"
             }
     }
 
-    /** Obtiene las iniciales de un nombre completo*/
     private fun obtenerIniciales(nombre: String): String {
         val partes = nombre.trim().split(" ").filter { it.isNotEmpty() }
         return when {
@@ -103,52 +114,29 @@ class PerfilActivity : AppCompatActivity() {
     }
 
     private fun configurarListeners() {
-        btnBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-
         optionMisPedidos.setOnClickListener {
-            startActivity(Intent(this, MisPedidosActivity::class.java))
+            startActivity(Intent(requireContext(), MisPedidosActivity::class.java))
         }
 
         optionDirecciones.setOnClickListener {
-            startActivity(Intent(this, MisDireccionesActivity::class.java))
+            startActivity(Intent(requireContext(), MisDireccionesActivity::class.java))
         }
 
         optionResenas.setOnClickListener {
-            startActivity(Intent(this, MisResenasActivity::class.java))
+            startActivity(Intent(requireContext(), MisResenasActivity::class.java))
         }
 
         optionEditarPerfil.setOnClickListener {
-            editNombreLauncher.launch(Intent(this, EditarNombreActivity::class.java))
+            editNombreLauncher.launch(Intent(requireContext(), EditarNombreActivity::class.java))
         }
 
         btnCerrarSesion.setOnClickListener {
             auth.signOut()
-            val intent = Intent(this, MainActivity::class.java).apply {
+            val intent = Intent(requireContext(), MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
             startActivity(intent)
-            finish()
-        }
-    }
-
-    private fun navegarA(destino: Class<*>) {
-        startActivity(Intent(this, destino).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        })
-        finish()
-    }
-
-    private fun configurarBottomNav() {
-        bottomNav.selectedItemId = R.id.navPerfil
-
-        bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navInicio  -> { navegarA(HomeActivity::class.java);      true }
-                R.id.navBuscar  -> { navegarA(ProductosActivity::class.java); true }
-                R.id.navCarrito -> { navegarA(CarritoActivity::class.java);   true }
-                R.id.navPerfil  -> true
-                else -> false
-            }
+            requireActivity().finish()
         }
     }
 }

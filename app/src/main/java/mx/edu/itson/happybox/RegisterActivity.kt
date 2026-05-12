@@ -70,7 +70,7 @@ class RegisterActivity : AppCompatActivity() {
                         .set(usuario)
                         .addOnSuccessListener {
                             Toast.makeText(this, "¡Cuenta creada con éxito!", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this, HomeActivity::class.java))
+                            startActivity(Intent(this, MainHostActivity::class.java))
                             finish()
                         }
                         .addOnFailureListener { e ->

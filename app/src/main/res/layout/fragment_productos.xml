@@ -107,15 +107,4 @@
         android:paddingBottom="4dp"
         android:clipToPadding="false"/>
 
-    <!-- ── Bottom Navigation ── -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavProductos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/background_card"
-        app:itemIconTint="@color/nav_selector"
-        app:itemTextColor="@color/nav_selector"
-        app:menu="@menu/bottom_nav_menu"
-        style="@style/Widget.HappyBox.BottomNavigation"/>
-
 </LinearLayout>

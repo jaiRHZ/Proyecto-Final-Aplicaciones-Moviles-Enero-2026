@@ -21,20 +21,8 @@
             android:name=".EditarNombreActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ProductosActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CarritoActivity"
+            android:name=".MainHostActivity"
             android:exported="false"
-            android:label="@string/titleCarrito"
-            android:theme="@style/Theme.HappyBox.NoActionBar" />
-        <activity
-            android:name=".PerfilActivity"
-            android:exported="false"
-            android:label="@string/titlePerfil"
             android:theme="@style/Theme.HappyBox.NoActionBar" />
         <activity
             android:name=".MisDireccionesActivity"

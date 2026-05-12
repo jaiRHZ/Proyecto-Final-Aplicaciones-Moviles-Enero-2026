@@ -257,16 +257,4 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- ── Bottom Navigation ── -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavHome"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:itemIconTint="@color/nav_selector"
-        app:itemTextColor="@color/nav_selector"
-        app:menu="@menu/bottom_nav_menu"
-        app:labelVisibilityMode="labeled"
-        android:elevation="16dp"/>
-
 </LinearLayout>
