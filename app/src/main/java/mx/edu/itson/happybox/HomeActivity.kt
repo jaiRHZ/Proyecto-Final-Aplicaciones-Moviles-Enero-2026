@@ -197,24 +197,22 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun navegarA(destino: Class<*>) {
+        startActivity(Intent(this, destino).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        })
+        finish()
+    }
+
     private fun configurarBottomNav() {
         bottomNav.selectedItemId = R.id.navInicio
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navInicio  -> true
-                R.id.navBuscar  -> {
-                    startActivity(Intent(this, ProductosActivity::class.java))
-                    true
-                }
-                R.id.navCarrito -> {
-                    startActivity(Intent(this, CarritoActivity::class.java))
-                    true
-                }
-                R.id.navPerfil  -> {
-                    startActivity(Intent(this, PerfilActivity::class.java))
-                    true
-                }
+                R.id.navBuscar  -> { navegarA(ProductosActivity::class.java); true }
+                R.id.navCarrito -> { navegarA(CarritoActivity::class.java);   true }
+                R.id.navPerfil  -> { navegarA(PerfilActivity::class.java);    true }
                 else -> false
             }
         }
