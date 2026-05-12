@@ -37,6 +37,16 @@
             android:label="@string/titlePerfil"
             android:theme="@style/Theme.HappyBox.NoActionBar" />
         <activity
+            android:name=".MisDireccionesActivity"
+            android:exported="false"
+            android:label="Mis Direcciones"
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
+        <activity
+            android:name=".FormularioDomicilioActivity"
+            android:exported="false"
+            android:label="Registrar Domicilio"
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
+        <activity
             android:name=".MisPedidosActivity"
             android:exported="false"
             android:label="@string/optionMisPedidos"

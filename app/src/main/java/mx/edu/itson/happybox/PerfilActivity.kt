@@ -108,7 +108,7 @@ class PerfilActivity : AppCompatActivity() {
         }
 
         optionDirecciones.setOnClickListener {
-            Toast.makeText(this, "Mis direcciones próximamente", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, MisDireccionesActivity::class.java))
         }
 
         optionResenas.setOnClickListener {
