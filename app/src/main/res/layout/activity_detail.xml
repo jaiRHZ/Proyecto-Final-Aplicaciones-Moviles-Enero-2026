@@ -99,7 +99,7 @@
                     android:backgroundTint="#FDE8F1"
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="4dp"
-                    android:text="Envío gratis en compras mayores a $50"
+                    android:text="Envío gratis en compras mayores a $350"
                     android:textColor="@color/happybox_primary"
                     android:textSize="12sp" />
 
