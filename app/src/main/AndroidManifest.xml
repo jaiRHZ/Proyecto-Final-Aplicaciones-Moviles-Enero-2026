@@ -25,6 +25,10 @@
             android:exported="false"
             android:theme="@style/Theme.HappyBox.NoActionBar" />
         <activity
+            android:name=".CheckoutActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
+        <activity
             android:name=".MisDireccionesActivity"
             android:exported="false"
             android:label="Mis Direcciones"
