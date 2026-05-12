@@ -37,7 +37,7 @@ class CheckoutAdapter(private var items: List<ItemCarrito>) : RecyclerView.Adapt
         fun bind(item: ItemCarrito) {
             tvName.text = item.producto.nombre
             tvQty.text = "Cantidad: ${item.cantidad}"
-            tvSubtotal.text = String.format("$%.2f", item.subtotal)
+            tvSubtotal.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(item.subtotal)
             ivProduct.setImageResource(if (item.producto.imagenResId != 0) item.producto.imagenResId else R.drawable.ic_placeholder_producto)
         }
     }

@@ -53,15 +53,11 @@ class CarritoAdapter(
         // ── Asignar datos ─────────────────────────────────────
         holder.tvNombre.text = item.producto.nombre
 
-        holder.tvPrecioUnit.text = context.getString(
-            R.string.formatoPrecioCarrito, item.producto.precio
-        )
+        holder.tvPrecioUnit.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(item.producto.precio)
 
         holder.tvCantidad.text = item.cantidad.toString()
 
-        holder.tvSubtotal.text = context.getString(
-            R.string.formatoPrecioCarrito, item.subtotal
-        )
+        holder.tvSubtotal.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(item.subtotal)
 
         // Imagen: usa el resource del producto o placeholder
         if (item.producto.imagenResId != 0) {
@@ -76,9 +72,7 @@ class CarritoAdapter(
             // Actualizar la cantidad y subtotal visualmente
             // sin necesidad de redibujar toda la lista
             holder.tvCantidad.text = item.cantidad.toString()
-            holder.tvSubtotal.text = context.getString(
-                R.string.formatoPrecioCarrito, item.subtotal
-            )
+            holder.tvSubtotal.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(item.subtotal)
         }
 
         // ── Botón - ───────────────────────────────────────────

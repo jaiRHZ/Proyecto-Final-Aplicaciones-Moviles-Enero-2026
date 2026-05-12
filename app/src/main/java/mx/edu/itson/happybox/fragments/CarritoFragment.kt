@@ -254,26 +254,18 @@ class CarritoFragment : Fragment() {
     }
 
     private fun calcularTotal() {
-        var total = listaItems.sumOf { it.subtotal }
-        val iva = total * 0.16
+        val resumen = mx.edu.itson.happybox.utils.PrecioUtils.calcularResumen(listaItems)
         
-        val envio: Double
-        if (total >= 200.0) {
-            envio = 0.0
+        if (resumen.aplicaPromoEnvio) {
             tvPromoEnvio.visibility = View.VISIBLE
         } else {
-            envio = 50.0
             tvPromoEnvio.visibility = View.GONE
         }
-        
-        val subtotal = total - iva
 
-        total += envio
-
-        tvSubtotalCarrito.text = getString(R.string.formatoPrecioCarrito, subtotal)
-        tvIvaCarrito.text = getString(R.string.formatoPrecioCarrito, iva)
-        tvEnvioCarrito.text = getString(R.string.formatoPrecioCarrito, envio)
-        tvTotalCarrito.text = getString(R.string.formatoPrecioCarrito, total)
+        tvSubtotalCarrito.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.subtotal)
+        tvIvaCarrito.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.iva)
+        tvEnvioCarrito.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.envio)
+        tvTotalCarrito.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.total)
     }
 
     private fun configurarToolbar() {

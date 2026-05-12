@@ -191,15 +191,13 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun calcularTotal() {
-        val total = listaItems.sumOf { it.subtotal }
-        val iva = total * 0.16
-        val envio = if (total >= 200.0) 0.0 else 50.0
-        totalPagar = total + envio
+        val resumen = mx.edu.itson.happybox.utils.PrecioUtils.calcularResumen(listaItems)
+        totalPagar = resumen.total
 
-        tvCheckSubtotal.text = String.format("$%.2f", total - iva )
-        tvCheckIva.text = String.format("$%.2f", iva)
-        tvCheckEnvio.text = String.format("$%.2f", envio)
-        tvCheckTotal.text = String.format("$%.2f", totalPagar)
+        tvCheckSubtotal.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.subtotal)
+        tvCheckIva.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.iva)
+        tvCheckEnvio.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.envio)
+        tvCheckTotal.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.total)
     }
 
     private fun configurarListeners() {
@@ -279,7 +277,7 @@ class CheckoutActivity : AppCompatActivity() {
         val direccion = domicilioSeleccionado?.getDireccionCompleta() ?: ""
         val mensaje = "¡Hola $nombreUsuario!\n\n" +
                       "Tu pedido ha sido confirmado exitosamente.\n" +
-                      "Total pagado: $${String.format("%.2f", totalPagar)}\n" +
+                      "Total pagado: ${mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(totalPagar)}\n" +
                       "Método: $metodoPagoSeleccionado\n\n" +
                       "Se enviará a: $direccion\n\n" +
                       "¡Gracias por tu compra en HappyBox!"

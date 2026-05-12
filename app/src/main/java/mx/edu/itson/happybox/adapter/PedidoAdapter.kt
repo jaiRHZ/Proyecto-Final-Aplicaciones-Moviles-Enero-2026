@@ -55,7 +55,7 @@ class PedidoAdapter(private val context: Context, private var lista: List<Pedido
         val totalArticulos = item.items.sumOf { (it["cantidad"] as? Long)?.toInt() ?: 1 }
         tvCantidad.text = "$totalArticulos artículos"
         
-        tvTotal.text = String.format("$%.2f", item.total)
+        tvTotal.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(item.total)
 
         layoutLlegada.visibility = View.GONE
 
@@ -90,7 +90,7 @@ class PedidoAdapter(private val context: Context, private var lista: List<Pedido
                 }
                 
                 val tvProdPrice = TextView(context).apply {
-                    text = String.format("$%.2f", sub)
+                    text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(sub)
                     setTextColor(context.getColor(R.color.text_primary))
                     textSize = 13f
                     setTypeface(null, Typeface.BOLD)
