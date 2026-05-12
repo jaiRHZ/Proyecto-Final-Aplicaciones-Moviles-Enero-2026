@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import mx.edu.itson.happybox.adapter.ResenaAdapter
 import mx.edu.itson.happybox.model.Resena
 import android.util.Log
@@ -37,6 +39,7 @@ class DetailActivity : AppCompatActivity() {
 
     private lateinit var resenaAdapter: ResenaAdapter
     private lateinit var db: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
     private var cantidad = 1
     private var productoId: Int = -1
@@ -52,6 +55,8 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+
+        auth = FirebaseAuth.getInstance()
 
         inicializarVistas()
         recuperarDatos()
@@ -70,7 +75,6 @@ class DetailActivity : AppCompatActivity() {
         btnAddToCart = findViewById(R.id.btnAddToCart)
         btnBuyNow = findViewById(R.id.btnBuyNow)
 
-        // En tu XML este id ya existe: tvDetailReviews
         tvResenas          = findViewById(R.id.tvDetailReviews)
         chipEscribirResena = findViewById(R.id.chipEscribirResena)
         rvResenas          = findViewById(R.id.rvResenas)
@@ -152,8 +156,31 @@ class DetailActivity : AppCompatActivity() {
         }
 
         btnAddToCart.setOnClickListener {
-            Toast.makeText(this, "Agregado al carrito: $cantidad unidades", Toast.LENGTH_SHORT).show()
-            finish()
+            val uid = auth.currentUser?.uid
+            if (uid == null) {
+                Toast.makeText(this, "Inicia sesión para agregar al carrito", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            btnAddToCart.isEnabled = false
+
+            val cartData = mapOf(
+                "productoId" to productoId,
+                "cantidad" to cantidad,
+                "timestamp" to System.currentTimeMillis()
+            )
+
+            db.collection("usuarios").document(uid).collection("carrito").document(productoId.toString())
+                .set(cartData, SetOptions.merge())
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Se agregó exitosamente al carrito", Toast.LENGTH_SHORT).show()
+                    btnAddToCart.isEnabled = true
+                }
+                .addOnFailureListener { e ->
+                    Log.e("DetailActivity", "Error al agregar al carrito", e)
+                    Toast.makeText(this, "Error al agregar al carrito", Toast.LENGTH_SHORT).show()
+                    btnAddToCart.isEnabled = true
+                }
         }
 
         btnBuyNow.setOnClickListener {
