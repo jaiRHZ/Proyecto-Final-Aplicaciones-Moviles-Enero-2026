@@ -24,6 +24,10 @@ class CarritoFragment : Fragment() {
     private lateinit var toolbar: Toolbar
     private lateinit var listViewCarrito: ListView
     private lateinit var tvTotalCarrito: TextView
+    private lateinit var tvSubtotalCarrito: TextView
+    private lateinit var tvIvaCarrito: TextView
+    private lateinit var tvEnvioCarrito: TextView
+    private lateinit var tvPromoEnvio: TextView
     private lateinit var tvCarritoVacio: TextView
     private lateinit var layoutResumen: View
 
@@ -60,6 +64,10 @@ class CarritoFragment : Fragment() {
         toolbar = view.findViewById(R.id.toolbarCarrito)
         listViewCarrito = view.findViewById(R.id.listViewCarrito)
         tvTotalCarrito = view.findViewById(R.id.tvTotalCarrito)
+        tvSubtotalCarrito = view.findViewById(R.id.tvSubtotalCarrito)
+        tvIvaCarrito = view.findViewById(R.id.tvIvaCarrito)
+        tvEnvioCarrito = view.findViewById(R.id.tvEnvioCarrito)
+        tvPromoEnvio = view.findViewById(R.id.tvPromoEnvio)
         tvCarritoVacio = view.findViewById(R.id.tvCarritoVacio)
         layoutResumen = view.findViewById(R.id.layoutResumen)
     }
@@ -231,11 +239,35 @@ class CarritoFragment : Fragment() {
         tvCarritoVacio.visibility = View.VISIBLE
         listaItems.clear()
         adapter.notifyDataSetChanged()
-        tvTotalCarrito.text = "$0.00"
+        
+        val cero = "$0.00"
+        tvSubtotalCarrito.text = cero
+        tvIvaCarrito.text = cero
+        tvEnvioCarrito.text = cero
+        tvTotalCarrito.text = cero
+        tvPromoEnvio.visibility = View.GONE
     }
 
     private fun calcularTotal() {
-        val total = listaItems.sumOf { it.subtotal }
+        var total = listaItems.sumOf { it.subtotal }
+        val iva = total * 0.16
+        
+        val envio: Double
+        if (total >= 200.0) {
+            envio = 0.0
+            tvPromoEnvio.visibility = View.VISIBLE
+        } else {
+            envio = 50.0
+            tvPromoEnvio.visibility = View.GONE
+        }
+        
+        val subtotal = total - iva
+
+        total += envio
+
+        tvSubtotalCarrito.text = getString(R.string.formatoPrecioCarrito, subtotal)
+        tvIvaCarrito.text = getString(R.string.formatoPrecioCarrito, iva)
+        tvEnvioCarrito.text = getString(R.string.formatoPrecioCarrito, envio)
         tvTotalCarrito.text = getString(R.string.formatoPrecioCarrito, total)
     }
 

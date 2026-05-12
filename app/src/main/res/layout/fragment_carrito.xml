@@ -57,28 +57,117 @@
                 android:background="@color/border_default"
                 android:layout_marginBottom="16dp"/>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_marginBottom="16dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- Subtotal -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/labelTotal"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:layout_marginBottom="4dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Subtotal"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_secondary"/>
+                    <TextView
+                        android:id="@+id/tvSubtotalCarrito"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="$0.00"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary"/>
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tvTotalCarrito"
-                    android:layout_width="wrap_content"
+                <!-- IVA -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:text="$0.00"
-                    android:textSize="18sp"
-                    android:textColor="@color/text_price"
-                    android:textStyle="bold"/>
-            </RelativeLayout>
+                    android:layout_marginBottom="4dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="IVA (16%)"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_secondary"/>
+                    <TextView
+                        android:id="@+id/tvIvaCarrito"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="$0.00"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary"/>
+                </RelativeLayout>
+
+                <!-- Envío -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Envío"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_secondary"/>
+                        <TextView
+                            android:id="@+id/tvPromoEnvio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" (¡Gratis en compras mayores a $200!)"
+                            android:textSize="12sp"
+                            android:textColor="@color/happybox_primary"
+                            android:textStyle="bold"
+                            android:visibility="gone"/>
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvEnvioCarrito"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="$0.00"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary"/>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/border_default"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"/>
+
+                <!-- Total -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/labelTotal"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/tvTotalCarrito"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="$0.00"
+                        android:textSize="18sp"
+                        android:textColor="@color/text_price"
+                        android:textStyle="bold"/>
+                </RelativeLayout>
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnConfirmarPedido"
