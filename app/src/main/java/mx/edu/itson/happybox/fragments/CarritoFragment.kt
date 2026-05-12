@@ -84,7 +84,11 @@ class CarritoFragment : Fragment() {
             val item = adapter.getItem(position)
             if (item != null) {
                 val intent = Intent(requireContext(), DetailActivity::class.java).apply {
-                    putExtra("productoId", item.producto.id)
+                    putExtra("productoId",          item.producto.id)
+                    putExtra("productoNombre",      item.producto.nombre)
+                    putExtra("productoPrecio",      item.producto.precio)
+                    putExtra("productoDescription", item.producto.descripcion)
+                    putExtra("productoImagenRes",   item.producto.imagenResId)
                 }
                 startActivity(intent)
             }
