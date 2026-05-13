@@ -2,8 +2,11 @@ package mx.edu.itson.happybox
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
+import android.widget.EditText
 import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -27,6 +30,7 @@ class ProductosActivity : AppCompatActivity() {
     private lateinit var chipPrecioAsc: Chip
     private lateinit var chipPrecioDesc: Chip
     private lateinit var chipNombre: Chip
+    private lateinit var etBuscar: EditText
     private lateinit var listViewProductos: ListView
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var progressBar: ProgressBar
@@ -39,6 +43,14 @@ class ProductosActivity : AppCompatActivity() {
 
     private var categoria: String? = null
     private var query: String? = null
+    private var ordenSeleccionado: Orden = Orden.NINGUNO
+
+    private enum class Orden {
+        NINGUNO,
+        PRECIO_ASC,
+        PRECIO_DESC,
+        NOMBRE
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +64,7 @@ class ProductosActivity : AppCompatActivity() {
         inicializarVistas()
         configurarToolbar()
         configurarListView()
+        configurarBuscador()
         configurarChips()
         configurarBottomNav()
 
@@ -68,6 +81,7 @@ class ProductosActivity : AppCompatActivity() {
         chipPrecioAsc     = findViewById(R.id.chipPrecioAsc)
         chipPrecioDesc    = findViewById(R.id.chipPrecioDesc)
         chipNombre        = findViewById(R.id.chipNombre)
+        etBuscar          = findViewById(R.id.etBuscar)
         listViewProductos = findViewById(R.id.listViewProductos)
         bottomNav         = findViewById(R.id.bottomNavProductos)
         progressBar       = findViewById(R.id.progressBarProductos)
@@ -97,19 +111,18 @@ class ProductosActivity : AppCompatActivity() {
                 val todos = snapshot.documents.mapNotNull { it.toObject(Producto::class.java) }
 
                 listaOriginal = when {
-                    query != null     -> todos.filter {
-                        it.nombre.contains(query!!, ignoreCase = true) ||
-                        it.descripcion.contains(query!!, ignoreCase = true)
-                    }
                     categoria != null -> todos.filter { it.categoria == categoria }
                     else              -> todos
                 }
 
-                listaFiltrada.clear()
-                listaFiltrada.addAll(listaOriginal)
-                adapter.notifyDataSetChanged()
+                if (!query.isNullOrBlank() && etBuscar.text.isNullOrBlank()) {
+                    etBuscar.setText(query)
+                    etBuscar.setSelection(etBuscar.text.length)
+                } else {
+                    aplicarBusquedaYOrden()
+                }
 
-                if (listaOriginal.isEmpty()) {
+                if (listaFiltrada.isEmpty()) {
                     Toast.makeText(this, getString(R.string.toastListaVacia), Toast.LENGTH_SHORT).show()
                 }
 
@@ -119,6 +132,21 @@ class ProductosActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 Toast.makeText(this, "Error al cargar productos: ${e.message}", Toast.LENGTH_LONG).show()
             }
+    }
+
+    private fun configurarBuscador() {
+        etBuscar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                aplicarBusquedaYOrden()
+                supportActionBar?.title = if (s.isNullOrBlank()) {
+                    categoria ?: "Productos"
+                } else {
+                    "Resultados: ${s.toString().trim()}"
+                }
+            }
+            override fun afterTextChanged(s: Editable?) = Unit
+        })
     }
 
     private fun configurarListView() {
@@ -135,33 +163,53 @@ class ProductosActivity : AppCompatActivity() {
         chipTodos.setOnClickListener {
             desmarcarTodosLosChips()
             chipTodos.isChecked = true
-            listaFiltrada.clear()
-            listaFiltrada.addAll(listaOriginal)
-            adapter.notifyDataSetChanged()
+            ordenSeleccionado = Orden.NINGUNO
+            aplicarBusquedaYOrden()
         }
 
         chipPrecioAsc.setOnClickListener {
             desmarcarTodosLosChips()
             chipPrecioAsc.isChecked = true
-            listaFiltrada.sortBy { it.precio }
-            adapter.notifyDataSetChanged()
+            ordenSeleccionado = Orden.PRECIO_ASC
+            aplicarBusquedaYOrden()
         }
 
         chipPrecioDesc.setOnClickListener {
             desmarcarTodosLosChips()
             chipPrecioDesc.isChecked = true
-            listaFiltrada.sortByDescending { it.precio }
-            adapter.notifyDataSetChanged()
+            ordenSeleccionado = Orden.PRECIO_DESC
+            aplicarBusquedaYOrden()
         }
 
         chipNombre.setOnClickListener {
             desmarcarTodosLosChips()
             chipNombre.isChecked = true
-            listaFiltrada.sortBy { it.nombre }
-            adapter.notifyDataSetChanged()
+            ordenSeleccionado = Orden.NOMBRE
+            aplicarBusquedaYOrden()
         }
 
         chipTodos.isChecked = true
+    }
+
+    private fun aplicarBusquedaYOrden() {
+        val consulta = etBuscar.text.toString().trim()
+        val filtrada = listaOriginal.filter { producto ->
+            consulta.isEmpty() ||
+                producto.nombre.contains(consulta, ignoreCase = true) ||
+                producto.descripcion.contains(consulta, ignoreCase = true) ||
+                producto.categoria.contains(consulta, ignoreCase = true)
+        }
+
+        listaFiltrada.clear()
+        listaFiltrada.addAll(
+            when (ordenSeleccionado) {
+                Orden.PRECIO_ASC -> filtrada.sortedBy { it.precio }
+                Orden.PRECIO_DESC -> filtrada.sortedByDescending { it.precio }
+                Orden.NOMBRE -> filtrada.sortedBy { it.nombre }
+                Orden.NINGUNO -> filtrada
+            }
+        )
+        adapter.notifyDataSetChanged()
     }
 
     private fun desmarcarTodosLosChips() {

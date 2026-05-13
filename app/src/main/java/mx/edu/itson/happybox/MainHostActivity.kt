@@ -51,4 +51,14 @@ class MainHostActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
+
+    fun abrirProductos(query: String) {
+        val fragment = ProductosFragment().apply {
+            arguments = Bundle().apply {
+                putString("query", query)
+            }
+        }
+        cargarFragment(fragment)
+        bottomNav.menu.findItem(R.id.navBuscar).isChecked = true
+    }
 }
