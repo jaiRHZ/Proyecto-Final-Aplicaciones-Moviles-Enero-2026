@@ -2,11 +2,11 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="190dp"
-    android:layout_height="265dp"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="3dp"
     app:strokeWidth="0dp">
 
     <LinearLayout
@@ -16,10 +16,10 @@
 
         <!-- Imagen del producto -->
         <ImageView
-            android:id="@+id/ivSugeridoImagen"
+            android:id="@+id/ivProductoImagen"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_marginTop="12dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="10dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_placeholder_producto"
             android:background="@color/happybox_secondary"/>
@@ -29,12 +29,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="10dp"
+            android:padding="8dp"
             android:gravity="top">
 
             <!-- Badge de categoría -->
             <TextView
-                android:id="@+id/tvSugeridoCategoria"
+                android:id="@+id/tvProductoCategoria"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Categoría"
@@ -49,7 +49,7 @@
 
             <!-- Nombre -->
             <TextView
-                android:id="@+id/tvSugeridoNombre"
+                android:id="@+id/tvProductoNombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Nombre del producto"
@@ -57,12 +57,13 @@
                 android:textStyle="bold"
                 android:textColor="@color/text_primary"
                 android:maxLines="2"
+                android:minLines="2"
                 android:ellipsize="end"
                 android:layout_marginBottom="4dp"/>
 
             <!-- Precio -->
             <TextView
-                android:id="@+id/tvSugeridoPrecio"
+                android:id="@+id/tvProductoPrecio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$0.00 MXN"

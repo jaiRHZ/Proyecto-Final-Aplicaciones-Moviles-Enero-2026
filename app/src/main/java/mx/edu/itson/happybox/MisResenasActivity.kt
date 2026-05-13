@@ -144,8 +144,11 @@ class MisResenasActivity : AppCompatActivity() {
 
     private fun mostrarModalEdicion(resena: Resena) {
         val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.dialog_editar_resena, null)
+        val view = layoutInflater.inflate(R.layout.dialog_resena, null)
         dialog.setContentView(view)
+
+        val tvTitle = view.findViewById<TextView>(R.id.tvDialogResenaTitle)
+        tvTitle.text = "Editar Reseña"
 
         val ratingBar = view.findViewById<RatingBar>(R.id.ratingEditResena)
         val etTitulo = view.findViewById<TextInputEditText>(R.id.etEditTitulo)

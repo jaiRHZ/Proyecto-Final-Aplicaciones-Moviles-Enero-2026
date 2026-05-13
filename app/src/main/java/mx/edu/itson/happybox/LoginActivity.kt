@@ -53,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
             auth.signInWithEmailAndPassword(correo, contrasena)
                 .addOnSuccessListener {
                     Toast.makeText(this, "¡Bienvenido!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, HomeActivity::class.java))
+                    startActivity(Intent(this, MainHostActivity::class.java))
                     finish()
                 }
                 .addOnFailureListener { e ->

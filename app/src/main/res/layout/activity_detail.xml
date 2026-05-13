@@ -70,23 +70,6 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp" />
 
-                    <!-- Spacer para empujar el chip al extremo derecho -->
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipEscribirResena"
-                        style="@style/Widget.MaterialComponents.Chip.Action"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Escribir reseña"
-                        app:chipBackgroundColor="@color/happybox_primary"
-                        app:chipCornerRadius="20dp"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-
                 </LinearLayout>
 
                 <!-- Price Row -->
@@ -116,7 +99,7 @@
                     android:backgroundTint="#FDE8F1"
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="4dp"
-                    android:text="Envío gratis en compras mayores a $50"
+                    android:text="Envío gratis en compras mayores a $350"
                     android:textColor="@color/happybox_primary"
                     android:textSize="12sp" />
 

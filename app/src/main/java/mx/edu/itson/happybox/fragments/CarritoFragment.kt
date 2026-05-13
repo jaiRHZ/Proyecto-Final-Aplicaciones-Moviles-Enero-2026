@@ -1,27 +1,33 @@
-package mx.edu.itson.happybox
+package mx.edu.itson.happybox.fragments
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import mx.edu.itson.happybox.DetailActivity
+import mx.edu.itson.happybox.R
 import mx.edu.itson.happybox.adapter.CarritoAdapter
 import mx.edu.itson.happybox.model.ItemCarrito
 import mx.edu.itson.happybox.model.Producto
 
-class CarritoActivity : AppCompatActivity() {
+class CarritoFragment : Fragment() {
 
     private lateinit var toolbar: Toolbar
     private lateinit var listViewCarrito: ListView
     private lateinit var tvTotalCarrito: TextView
-    private lateinit var bottomNav: BottomNavigationView
+    private lateinit var tvSubtotalCarrito: TextView
+    private lateinit var tvIvaCarrito: TextView
+    private lateinit var tvEnvioCarrito: TextView
+    private lateinit var tvPromoEnvio: TextView
     private lateinit var tvCarritoVacio: TextView
     private lateinit var layoutResumen: View
 
@@ -31,16 +37,21 @@ class CarritoActivity : AppCompatActivity() {
     private var listaItems = mutableListOf<ItemCarrito>()
     private lateinit var adapter: CarritoAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_carrito)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_carrito, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        inicializarVistas()
+        inicializarVistas(view)
         configurarToolbar()
-        configurarBottomNav()
         configurarAdapter()
     }
 
@@ -49,18 +60,26 @@ class CarritoActivity : AppCompatActivity() {
         cargarCarrito()
     }
 
-    private fun inicializarVistas() {
-        toolbar = findViewById(R.id.toolbarCarrito)
-        listViewCarrito = findViewById(R.id.listViewCarrito)
-        tvTotalCarrito = findViewById(R.id.tvTotalCarrito)
-        bottomNav = findViewById(R.id.bottomNavCarrito)
-        tvCarritoVacio = findViewById(R.id.tvCarritoVacio)
-        layoutResumen = findViewById(R.id.layoutResumen)
+    private fun inicializarVistas(view: View) {
+        toolbar = view.findViewById(R.id.toolbarCarrito)
+        listViewCarrito = view.findViewById(R.id.listViewCarrito)
+        tvTotalCarrito = view.findViewById(R.id.tvTotalCarrito)
+        tvSubtotalCarrito = view.findViewById(R.id.tvSubtotalCarrito)
+        tvIvaCarrito = view.findViewById(R.id.tvIvaCarrito)
+        tvEnvioCarrito = view.findViewById(R.id.tvEnvioCarrito)
+        tvPromoEnvio = view.findViewById(R.id.tvPromoEnvio)
+        tvCarritoVacio = view.findViewById(R.id.tvCarritoVacio)
+        layoutResumen = view.findViewById(R.id.layoutResumen)
+        val btnConfirmarPedido = view.findViewById<View>(R.id.btnConfirmarPedido)
+        btnConfirmarPedido.setOnClickListener {
+            val intent = Intent(requireContext(), mx.edu.itson.happybox.CheckoutActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun configurarAdapter() {
         adapter = CarritoAdapter(
-            this,
+            requireContext(),
             listaItems,
             onIncrementar = { item -> actualizarCantidad(item, item.cantidad + 1) },
             onDecrementar = { item ->
@@ -73,6 +92,20 @@ class CarritoActivity : AppCompatActivity() {
             onEliminar = { item -> eliminarDelCarrito(item) }
         )
         listViewCarrito.adapter = adapter
+
+        listViewCarrito.setOnItemClickListener { _, _, position, _ ->
+            val item = adapter.getItem(position)
+            if (item != null) {
+                val intent = Intent(requireContext(), DetailActivity::class.java).apply {
+                    putExtra("productoId",          item.producto.id)
+                    putExtra("productoNombre",      item.producto.nombre)
+                    putExtra("productoPrecio",      item.producto.precio)
+                    putExtra("productoDescription", item.producto.descripcion)
+                    putExtra("productoImagenRes",   item.producto.imagenResId)
+                }
+                startActivity(intent)
+            }
+        }
     }
 
     private fun cargarCarrito() {
@@ -85,6 +118,8 @@ class CarritoActivity : AppCompatActivity() {
         db.collection("usuarios").document(uid).collection("carrito")
             .get()
             .addOnSuccessListener { result ->
+                if (!isAdded) return@addOnSuccessListener
+                
                 if (result.isEmpty) {
                     mostrarVacio()
                     return@addOnSuccessListener
@@ -102,6 +137,7 @@ class CarritoActivity : AppCompatActivity() {
                         db.collection("productos").document(productoId.toString())
                             .get()
                             .addOnSuccessListener { prodDoc ->
+                                if (!isAdded) return@addOnSuccessListener
                                 val producto = prodDoc.toObject(Producto::class.java)
                                 if (producto != null) {
                                     itemsTemp.add(ItemCarrito(producto, cantidad))
@@ -112,6 +148,7 @@ class CarritoActivity : AppCompatActivity() {
                                 }
                             }
                             .addOnFailureListener {
+                                if (!isAdded) return@addOnFailureListener
                                 procesados++
                                 if (procesados == totalDocs) {
                                     actualizarListaUI(itemsTemp)
@@ -126,8 +163,9 @@ class CarritoActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { e ->
-                Log.e("CarritoActivity", "Error al cargar el carrito", e)
-                Toast.makeText(this, "Error al cargar carrito", Toast.LENGTH_SHORT).show()
+                if (!isAdded) return@addOnFailureListener
+                Log.e("CarritoFragment", "Error al cargar el carrito", e)
+                Toast.makeText(requireContext(), "Error al cargar carrito", Toast.LENGTH_SHORT).show()
                 mostrarVacio()
             }
     }
@@ -139,12 +177,21 @@ class CarritoActivity : AppCompatActivity() {
         db.collection("usuarios").document(uid).collection("carrito").document(productoId)
             .update("cantidad", nuevaCantidad)
             .addOnSuccessListener {
+                if (!isAdded) return@addOnSuccessListener
                 item.cantidad = nuevaCantidad
                 adapter.notifyDataSetChanged()
                 calcularTotal()
+                
+                // Disparar actualización del badge en la activity principal
+                val activity = requireActivity()
+                if (activity is mx.edu.itson.happybox.MainHostActivity) {
+                    mx.edu.itson.happybox.utils.BadgeUtils.actualizarBadgeCarrito(
+                        activity.findViewById(R.id.bottomNavHost)
+                    )
+                }
             }
             .addOnFailureListener { e ->
-                Log.e("CarritoActivity", "Error al actualizar cantidad", e)
+                Log.e("CarritoFragment", "Error al actualizar cantidad", e)
             }
     }
 
@@ -155,16 +202,25 @@ class CarritoActivity : AppCompatActivity() {
         db.collection("usuarios").document(uid).collection("carrito").document(productoId)
             .delete()
             .addOnSuccessListener {
+                if (!isAdded) return@addOnSuccessListener
                 listaItems.remove(item)
                 adapter.notifyDataSetChanged()
                 calcularTotal()
                 if (listaItems.isEmpty()) {
                     mostrarVacio()
                 }
-                Toast.makeText(this, "Producto eliminado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Producto eliminado", Toast.LENGTH_SHORT).show()
+                
+                // Disparar actualización del badge en la activity principal
+                val activity = requireActivity()
+                if (activity is mx.edu.itson.happybox.MainHostActivity) {
+                    mx.edu.itson.happybox.utils.BadgeUtils.actualizarBadgeCarrito(
+                        activity.findViewById(R.id.bottomNavHost)
+                    )
+                }
             }
             .addOnFailureListener { e ->
-                Log.e("CarritoActivity", "Error al eliminar producto", e)
+                Log.e("CarritoFragment", "Error al eliminar producto", e)
             }
     }
 
@@ -188,42 +244,37 @@ class CarritoActivity : AppCompatActivity() {
         tvCarritoVacio.visibility = View.VISIBLE
         listaItems.clear()
         adapter.notifyDataSetChanged()
-        tvTotalCarrito.text = "$0.00"
+        
+        val cero = "$0.00"
+        tvSubtotalCarrito.text = cero
+        tvIvaCarrito.text = cero
+        tvEnvioCarrito.text = cero
+        tvTotalCarrito.text = cero
+        tvPromoEnvio.visibility = View.GONE
     }
 
     private fun calcularTotal() {
-        val total = listaItems.sumOf { it.subtotal }
-        tvTotalCarrito.text = getString(R.string.formatoPrecioCarrito, total)
+        val resumen = mx.edu.itson.happybox.utils.PrecioUtils.calcularResumen(listaItems)
+        
+        if (resumen.aplicaPromoEnvio) {
+            tvPromoEnvio.visibility = View.VISIBLE
+        } else {
+            tvPromoEnvio.visibility = View.GONE
+        }
+
+        tvSubtotalCarrito.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.subtotal)
+        tvIvaCarrito.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.iva)
+        tvEnvioCarrito.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.envio)
+        tvTotalCarrito.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(resumen.total)
     }
 
     private fun configurarToolbar() {
-        setSupportActionBar(toolbar)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            title = getString(R.string.titleCarrito)
-        }
+        toolbar.title = getString(R.string.titleCarrito)
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
         toolbar.setNavigationOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-    }
-
-    private fun navegarA(destino: Class<*>) {
-        startActivity(Intent(this, destino).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        })
-        finish()
-    }
-
-    private fun configurarBottomNav() {
-        bottomNav.selectedItemId = R.id.navCarrito
-
-        bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navInicio  -> { navegarA(HomeActivity::class.java);    true }
-                R.id.navBuscar  -> { navegarA(ProductosActivity::class.java); true }
-                R.id.navCarrito -> true
-                R.id.navPerfil  -> { navegarA(PerfilActivity::class.java);  true }
-                else -> false
+            val activity = requireActivity()
+            if (activity is mx.edu.itson.happybox.MainHostActivity) {
+                activity.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavHost).selectedItemId = R.id.navInicio
             }
         }
     }
