@@ -2,6 +2,8 @@ package mx.edu.itson.happybox.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +44,7 @@ class HomeFragment : Fragment() {
 
     private var listaCompleta: List<Producto> = emptyList()
     private var adapterLista: ProductoRecyclerAdapter? = null
+    private var categoriaSeleccionada: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -104,22 +107,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun configurarBuscador() {
+        etBuscar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                aplicarFiltros()
+            }
+            override fun afterTextChanged(s: Editable?) = Unit
+        })
+
         etBuscar.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
                 val consulta = etBuscar.text.toString().trim()
                 if (consulta.isNotEmpty()) {
                     val activity = requireActivity()
                     if (activity is MainHostActivity) {
-                        // Navegar a ProductosFragment y pasarle la consulta
-                        val fragment = ProductosFragment().apply {
-                            arguments = Bundle().apply {
-                                putString("query", consulta)
-                            }
-                        }
-                        activity.supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, fragment)
-                            .commit()
-                        activity.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavHost).selectedItemId = R.id.navBuscar
+                        activity.abrirProductos(consulta)
                     }
                 }
                 true
@@ -157,11 +159,13 @@ class HomeFragment : Fragment() {
                         onClick  = { irADetalle(it) }
                     )
                     rvTodosProductos.adapter = adapterLista
+                    aplicarFiltros()
                 }
         }
     }
 
     private fun filtrarPorCategoria(categoria: String?) {
+        categoriaSeleccionada = categoria
         chipTodos.isChecked    = (categoria == null)
         cardDetalles.isChecked = (categoria == "Detalles")
         cardGlobos.isChecked   = (categoria == "Globos")
@@ -169,10 +173,19 @@ class HomeFragment : Fragment() {
         cardRegalos.isChecked  = (categoria == "Regalos")
         cardTazas.isChecked    = (categoria == "Tazas")
 
-        val filtrada = if (categoria == null) {
-            listaCompleta
-        } else {
-            listaCompleta.filter { it.categoria == categoria }
+        aplicarFiltros()
+    }
+
+    private fun aplicarFiltros() {
+        val consulta = etBuscar.text.toString().trim()
+        val filtrada = listaCompleta.filter { producto ->
+            val coincideCategoria = categoriaSeleccionada == null || producto.categoria == categoriaSeleccionada
+            val coincideBusqueda = consulta.isEmpty() ||
+                producto.nombre.contains(consulta, ignoreCase = true) ||
+                producto.descripcion.contains(consulta, ignoreCase = true) ||
+                producto.categoria.contains(consulta, ignoreCase = true)
+
+            coincideCategoria && coincideBusqueda
         }
 
         adapterLista = ProductoRecyclerAdapter(
