@@ -143,10 +143,11 @@ class CheckoutActivity : AppCompatActivity() {
             val nombre = intent.getStringExtra("productoNombre") ?: "Producto"
             val precio = intent.getDoubleExtra("productoPrecio", 0.0)
             val imagenRes = intent.getIntExtra("productoImagenRes", R.drawable.ic_placeholder_producto)
+            val imagenUrl = intent.getStringExtra("productoImagenUrl") ?: ""
             val cantidad = intent.getIntExtra("cantidad", 1)
 
             if (productoId != -1) {
-                val producto = Producto(id = productoId, nombre = nombre, precio = precio, imagenResId = imagenRes)
+                val producto = Producto(id = productoId, nombre = nombre, precio = precio, imagenResId = imagenRes, imagenUrl = imagenUrl)
                 listaItems.clear()
                 listaItems.add(ItemCarrito(producto, cantidad))
                 adapter.updateItems(listaItems)

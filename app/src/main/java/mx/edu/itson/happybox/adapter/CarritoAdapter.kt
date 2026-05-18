@@ -59,8 +59,13 @@ class CarritoAdapter(
 
         holder.tvSubtotal.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(item.subtotal)
 
-        // Imagen: usa el resource del producto o placeholder
-        if (item.producto.imagenResId != 0) {
+        // Imagen: usa la url, o resource del producto, o placeholder
+        if (item.producto.imagenUrl.isNotEmpty()) {
+            com.bumptech.glide.Glide.with(context)
+                .load(item.producto.imagenUrl)
+                .placeholder(R.drawable.ic_placeholder_producto)
+                .into(holder.imgProducto)
+        } else if (item.producto.imagenResId != 0) {
             holder.imgProducto.setImageResource(item.producto.imagenResId)
         } else {
             holder.imgProducto.setImageResource(R.drawable.ic_placeholder_producto)

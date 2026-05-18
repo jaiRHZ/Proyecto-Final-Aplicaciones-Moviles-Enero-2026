@@ -234,6 +234,7 @@ class ProductosFragment : Fragment() {
             putExtra("productoPrecio",      producto.precio)
             putExtra("productoDescription", producto.descripcion)
             putExtra("productoImagenRes",   producto.imagenResId)
+            putExtra("productoImagenUrl",   producto.imagenUrl)
         }
         startActivity(intent)
     }

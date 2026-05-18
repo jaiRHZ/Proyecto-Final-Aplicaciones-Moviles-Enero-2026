@@ -46,6 +46,7 @@ class DetailActivity : AppCompatActivity() {
 
     private var cantidad = 1
     private var productoId: Int = -1
+    private var currentImagenUrl: String = ""
 
 
 
@@ -90,11 +91,21 @@ class DetailActivity : AppCompatActivity() {
         val precio = intent.getDoubleExtra("productoPrecio", 0.0)
         val descripcion = intent.getStringExtra("productoDescription") ?: ""
         val imagenRes = intent.getIntExtra("productoImagenRes", R.drawable.ic_placeholder_producto)
+        val imagenUrl = intent.getStringExtra("productoImagenUrl") ?: ""
+        currentImagenUrl = imagenUrl
 
         tvTitle.text = nombre
         tvPrice.text = String.format("$%.2f", precio)
         tvDescription.text = descripcion
-        ivProduct.setImageResource(if (imagenRes != 0) imagenRes else R.drawable.ic_placeholder_producto)
+        
+        if (currentImagenUrl.isNotEmpty()) {
+            com.bumptech.glide.Glide.with(this)
+                .load(currentImagenUrl)
+                .placeholder(R.drawable.ic_placeholder_producto)
+                .into(ivProduct)
+        } else {
+            ivProduct.setImageResource(if (imagenRes != 0) imagenRes else R.drawable.ic_placeholder_producto)
+        }
         
         tvResenas.paintFlags = tvResenas.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
@@ -106,8 +117,12 @@ class DetailActivity : AppCompatActivity() {
                         maxStock = producto.stock
                         
                         // Cargar imagen de URL si existe
-                        if (producto.imagenUrl.isNotEmpty()) {
-                            com.bumptech.glide.Glide.with(this).load(producto.imagenUrl).into(ivProduct)
+                        if (producto.imagenUrl.isNotEmpty() && producto.imagenUrl != currentImagenUrl) {
+                            currentImagenUrl = producto.imagenUrl
+                            com.bumptech.glide.Glide.with(this@DetailActivity)
+                                .load(producto.imagenUrl)
+                                .placeholder(R.drawable.ic_placeholder_producto)
+                                .into(ivProduct)
                         }
 
                         // Validar disponibilidad
@@ -221,6 +236,7 @@ class DetailActivity : AppCompatActivity() {
                 putExtra("productoNombre", tvTitle.text.toString())
                 putExtra("productoPrecio", tvPrice.text.toString().replace("$", "").toDoubleOrNull() ?: 0.0)
                 putExtra("productoImagenRes", this@DetailActivity.intent.getIntExtra("productoImagenRes", R.drawable.ic_placeholder_producto))
+                putExtra("productoImagenUrl", currentImagenUrl)
                 putExtra("cantidad", cantidad)
             }
             startActivity(intent)

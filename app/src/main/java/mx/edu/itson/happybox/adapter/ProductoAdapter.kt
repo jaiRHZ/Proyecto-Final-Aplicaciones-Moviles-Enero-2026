@@ -54,8 +54,13 @@ class ProductoAdapter(
             holder.tvBadge.visibility = View.VISIBLE
         }
 
-        // Imagen del producto (placeholder si no hay recurso)
-        if (producto.imagenResId != 0) {
+        // Imagen del producto
+        if (producto.imagenUrl.isNotEmpty()) {
+            com.bumptech.glide.Glide.with(context)
+                .load(producto.imagenUrl)
+                .placeholder(R.drawable.ic_placeholder_producto)
+                .into(holder.imgProducto)
+        } else if (producto.imagenResId != 0) {
             holder.imgProducto.setImageResource(producto.imagenResId)
         } else {
             holder.imgProducto.setImageResource(R.drawable.ic_placeholder_producto)
