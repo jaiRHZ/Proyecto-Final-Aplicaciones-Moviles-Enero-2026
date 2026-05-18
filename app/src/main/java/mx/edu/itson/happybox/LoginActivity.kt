@@ -8,11 +8,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     private lateinit var etCorreo: TextInputEditText
     private lateinit var etContrasena: TextInputEditText
@@ -25,6 +27,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         etCorreo      = findViewById(R.id.etCorreo)
         etContrasena  = findViewById(R.id.etContrasena)
@@ -51,10 +54,27 @@ class LoginActivity : AppCompatActivity() {
 
             // Iniciar sesión con Firebase Auth
             auth.signInWithEmailAndPassword(correo, contrasena)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "¡Bienvenido!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, MainHostActivity::class.java))
-                    finish()
+                .addOnSuccessListener { authResult ->
+                    val uid = authResult.user?.uid
+                    if (uid != null) {
+                        db.collection("usuarios").document(uid).get()
+                            .addOnSuccessListener { doc ->
+                                val rol = doc.getString("rol") ?: "cliente"
+                                Toast.makeText(this, "¡Bienvenido!", Toast.LENGTH_SHORT).show()
+                                
+                                if (rol == "admin") {
+                                    startActivity(Intent(this, AdminDashboardActivity::class.java))
+                                } else {
+                                    startActivity(Intent(this, MainHostActivity::class.java))
+                                }
+                                finish()
+                            }
+                            .addOnFailureListener {
+                                btnEntrar.isEnabled = true
+                                btnEntrar.text = "Entrar"
+                                Toast.makeText(this, "Error al recuperar datos del usuario", Toast.LENGTH_SHORT).show()
+                            }
+                    }
                 }
                 .addOnFailureListener { e ->
                     btnEntrar.isEnabled = true

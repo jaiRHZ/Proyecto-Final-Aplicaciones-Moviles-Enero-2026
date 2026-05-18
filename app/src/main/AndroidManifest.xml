@@ -49,6 +49,14 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
+            android:name=".AdminDashboardActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
+        <activity
+            android:name=".AdminEditProductoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HappyBox.NoActionBar" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

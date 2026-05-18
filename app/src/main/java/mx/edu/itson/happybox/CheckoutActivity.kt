@@ -224,6 +224,7 @@ class CheckoutActivity : AppCompatActivity() {
         val pedidoData = hashMapOf(
             "id" to UUID.randomUUID().toString(),
             "fecha" to System.currentTimeMillis(),
+            "status" to "Procesando",
             "domicilio" to domicilioSeleccionado,
             "metodoPago" to metodoPagoSeleccionado,
             "total" to totalPagar,
@@ -241,7 +242,14 @@ class CheckoutActivity : AppCompatActivity() {
         db.collection("usuarios").document(uid).collection("pedidos")
             .add(pedidoData)
             .addOnSuccessListener {
-                vaciarCarrito(uid)
+                val batch = db.batch()
+                for (item in listaItems) {
+                    val prodRef = db.collection("productos").document(item.producto.id.toString())
+                    batch.update(prodRef, "stock", com.google.firebase.firestore.FieldValue.increment(-item.cantidad.toLong()))
+                }
+                batch.commit().addOnCompleteListener {
+                    vaciarCarrito(uid)
+                }
             }
             .addOnFailureListener { e ->
                 Log.e("CheckoutActivity", "Error al procesar pedido", e)
