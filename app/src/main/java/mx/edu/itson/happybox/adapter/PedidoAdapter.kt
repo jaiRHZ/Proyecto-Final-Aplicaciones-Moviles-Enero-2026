@@ -14,8 +14,31 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * Adapter de tipo [BaseAdapter] para el [android.widget.ListView] que muestra pedidos.
+ *
+ * Cada fila presenta un resumen del pedido (numero, fecha, status, total) y puede
+ * expandirse al tocarse para revelar el detalle de articulos y metodo de pago.
+ * El estado de expansion se almacena en [Pedido.isExpanded] en memoria.
+ *
+ * El color del campo de status varia segun su valor:
+ * - "Procesando" y "En camino": color primario de la aplicacion.
+ * - "Entregado": verde del sistema Android.
+ * - "Cancelado": gris del sistema Android.
+ *
+ * Se utiliza en [mx.edu.itson.happybox.MisPedidosActivity] (vista del cliente) y en
+ * [mx.edu.itson.happybox.fragments.AdminPedidosFragment] (vista del administrador).
+ *
+ * @param context Contexto de la Activity o Fragment que instancia el adapter.
+ * @param lista Lista inicial de pedidos a mostrar. Se actualiza mediante [updateData].
+ */
 class PedidoAdapter(private val context: Context, private var lista: List<Pedido>) : BaseAdapter() {
 
+    /**
+     * Reemplaza la lista de pedidos y solicita al ListView que redibuje todas las filas.
+     *
+     * @param newLista La nueva lista de pedidos que se debe mostrar.
+     */
     fun updateData(newLista: List<Pedido>) {
         this.lista = newLista
         notifyDataSetChanged()

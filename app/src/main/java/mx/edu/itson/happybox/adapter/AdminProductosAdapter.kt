@@ -11,12 +11,31 @@ import com.bumptech.glide.Glide
 import mx.edu.itson.happybox.R
 import mx.edu.itson.happybox.model.Producto
 
+/**
+ * Adapter del [RecyclerView] para la gestion del catalogo en la interfaz de administrador.
+ *
+ * Muestra una tarjeta por cada [Producto] con su imagen, nombre, precio y stock actual.
+ * Expone dos acciones mediante lambdas: editar y eliminar. La carga de imagenes se
+ * realiza con Glide, priorizando la URL remota ([Producto.imagenUrl]) sobre el recurso local.
+ *
+ * Se utiliza en [AdminProductosFragment].
+ *
+ * @param productos Lista inicial de productos a mostrar.
+ * @param onEditClick Lambda invocada cuando el administrador toca el boton "Editar".
+ *                    Recibe el [Producto] de la fila seleccionada como argumento.
+ * @param onDeleteClick Lambda invocada cuando el administrador toca el boton "Eliminar".
+ *                      Recibe el [Producto] de la fila seleccionada como argumento.
+ */
 class AdminProductosAdapter(
     private var productos: List<Producto>,
     private val onEditClick: (Producto) -> Unit,
     private val onDeleteClick: (Producto) -> Unit
 ) : RecyclerView.Adapter<AdminProductosAdapter.ViewHolder>() {
 
+    /**
+     * Contiene las referencias a las vistas de cada item para evitar llamadas
+     * repetidas a [View.findViewById] durante el scroll.
+     */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val ivImage: ImageView = view.findViewById(R.id.ivAdminProdImage)
         val tvName: TextView = view.findViewById(R.id.tvAdminProdName)
@@ -55,6 +74,11 @@ class AdminProductosAdapter(
 
     override fun getItemCount() = productos.size
 
+    /**
+     * Reemplaza la lista de productos y notifica al [RecyclerView] para que redibuje.
+     *
+     * @param nuevaLista La nueva lista de productos que se debe mostrar.
+     */
     fun actualizarLista(nuevaLista: List<Producto>) {
         productos = nuevaLista
         notifyDataSetChanged()
