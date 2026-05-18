@@ -33,4 +33,54 @@ object BadgeUtils {
                 bottomNav.removeBadge(R.id.navCarrito)
             }
     }
+
+    fun actualizarBadgeAdminPedidos(bottomNav: BottomNavigationView) {
+        val db = FirebaseFirestore.getInstance()
+        
+        db.collection("usuarios").get()
+            .addOnSuccessListener { users ->
+                var totalProcesando = 0
+                var procesados = 0
+                val totalUsuarios = users.size()
+
+                if (totalUsuarios == 0) {
+                    bottomNav.removeBadge(R.id.nav_admin_pedidos)
+                    return@addOnSuccessListener
+                }
+
+                for (userDoc in users) {
+                    db.collection("usuarios").document(userDoc.id).collection("pedidos").get()
+                        .addOnSuccessListener { pedidosResult ->
+                            val pedidosActivos = pedidosResult.mapNotNull { it.toObject(mx.edu.itson.happybox.model.Pedido::class.java) }
+                                .count { it.status.equals("Procesando", ignoreCase = true) }
+                            totalProcesando += pedidosActivos
+                            procesados++
+
+                            if (procesados == totalUsuarios) {
+                                if (totalProcesando > 0) {
+                                    val badge = bottomNav.getOrCreateBadge(R.id.nav_admin_pedidos)
+                                    badge.isVisible = true
+                                    badge.number = totalProcesando
+                                    badge.backgroundColor = ContextCompat.getColor(bottomNav.context, R.color.happybox_primary)
+                                } else {
+                                    bottomNav.removeBadge(R.id.nav_admin_pedidos)
+                                }
+                            }
+                        }
+                        .addOnFailureListener {
+                            procesados++
+                            if (procesados == totalUsuarios) {
+                                if (totalProcesando > 0) {
+                                    val badge = bottomNav.getOrCreateBadge(R.id.nav_admin_pedidos)
+                                    badge.isVisible = true
+                                    badge.number = totalProcesando
+                                    badge.backgroundColor = ContextCompat.getColor(bottomNav.context, R.color.happybox_primary)
+                                } else {
+                                    bottomNav.removeBadge(R.id.nav_admin_pedidos)
+                                }
+                            }
+                        }
+                }
+            }
+    }
 }

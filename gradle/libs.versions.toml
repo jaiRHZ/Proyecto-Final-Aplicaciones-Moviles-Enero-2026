@@ -12,6 +12,9 @@ constraintlayout = "2.2.1"
 googleServices = "4.4.2"
 firebaseAuth = "23.2.0"
 firebaseFirestore = "25.1.4"
+firebaseStorage = "21.0.1"
+glide = "4.16.0"
+mpchart = "3.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -24,6 +27,9 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+mpchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpchart" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

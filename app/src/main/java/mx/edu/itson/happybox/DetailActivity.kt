@@ -82,6 +82,8 @@ class DetailActivity : AppCompatActivity() {
         rvResenas.adapter = resenaAdapter
     }
 
+    private var maxStock = 0
+
     private fun recuperarDatos() {
         productoId = intent.getIntExtra("productoId", -1)
         val nombre = intent.getStringExtra("productoNombre") ?: "Producto"
@@ -95,6 +97,31 @@ class DetailActivity : AppCompatActivity() {
         ivProduct.setImageResource(if (imagenRes != 0) imagenRes else R.drawable.ic_placeholder_producto)
         
         tvResenas.paintFlags = tvResenas.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+
+        if (productoId != -1) {
+            db.collection("productos").document(productoId.toString()).get()
+                .addOnSuccessListener { doc ->
+                    val producto = doc.toObject(mx.edu.itson.happybox.model.Producto::class.java)
+                    if (producto != null) {
+                        maxStock = producto.stock
+                        
+                        // Cargar imagen de URL si existe
+                        if (producto.imagenUrl.isNotEmpty()) {
+                            com.bumptech.glide.Glide.with(this).load(producto.imagenUrl).into(ivProduct)
+                        }
+
+                        // Validar disponibilidad
+                        if (!producto.disponible || producto.stock <= 0) {
+                            tvPrice.text = "No Disponible"
+                            tvPrice.setTextColor(getColor(R.color.danger))
+                            btnAddToCart.isEnabled = false
+                            btnBuyNow.isEnabled = false
+                            btnPlus.isEnabled = false
+                            btnMinus.isEnabled = false
+                        }
+                    }
+                }
+        }
 
         cargarResenas()
     }
@@ -138,8 +165,12 @@ class DetailActivity : AppCompatActivity() {
         }
 
         btnPlus.setOnClickListener {
-            cantidad++
-            actualizarCantidad()
+            if (maxStock == 0 || cantidad < maxStock) {
+                cantidad++
+                actualizarCantidad()
+            } else {
+                Toast.makeText(this, "Stock máximo alcanzado", Toast.LENGTH_SHORT).show()
+            }
         }
 
         btnMinus.setOnClickListener {

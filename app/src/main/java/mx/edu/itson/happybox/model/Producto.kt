@@ -9,6 +9,8 @@ data class Producto(
     val categoria: String = "",
     val descripcion: String = "",
     val disponible: Boolean = true,
+    val stock: Int = 0,
+    val imagenUrl: String = "",
     // Recurso local: Firestore lo ignora, se asigna en memoria
     @get:Exclude val imagenResId: Int = 0
 )

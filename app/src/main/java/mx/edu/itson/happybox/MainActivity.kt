@@ -17,9 +17,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (FirebaseAuth.getInstance().currentUser != null) {
-            startActivity(Intent(this, MainHostActivity::class.java))
-            finish()
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                .collection("usuarios").document(currentUser.uid).get()
+                .addOnSuccessListener { doc ->
+                    val rol = doc.getString("rol") ?: "cliente"
+                    if (rol == "admin") {
+                        startActivity(Intent(this, AdminDashboardActivity::class.java))
+                    } else {
+                        startActivity(Intent(this, MainHostActivity::class.java))
+                    }
+                    finish()
+                }
+                .addOnFailureListener {
+                    startActivity(Intent(this, MainHostActivity::class.java))
+                    finish()
+                }
             return
         }
 
