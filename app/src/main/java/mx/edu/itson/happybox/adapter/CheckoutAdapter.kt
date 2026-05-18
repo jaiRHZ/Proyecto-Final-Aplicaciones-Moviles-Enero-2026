@@ -38,7 +38,14 @@ class CheckoutAdapter(private var items: List<ItemCarrito>) : RecyclerView.Adapt
             tvName.text = item.producto.nombre
             tvQty.text = "Cantidad: ${item.cantidad}"
             tvSubtotal.text = mx.edu.itson.happybox.utils.PrecioUtils.formatearPrecio(item.subtotal)
-            ivProduct.setImageResource(if (item.producto.imagenResId != 0) item.producto.imagenResId else R.drawable.ic_placeholder_producto)
+            if (item.producto.imagenUrl.isNotEmpty()) {
+                com.bumptech.glide.Glide.with(itemView.context)
+                    .load(item.producto.imagenUrl)
+                    .placeholder(R.drawable.ic_placeholder_producto)
+                    .into(ivProduct)
+            } else {
+                ivProduct.setImageResource(if (item.producto.imagenResId != 0) item.producto.imagenResId else R.drawable.ic_placeholder_producto)
+            }
         }
     }
 }

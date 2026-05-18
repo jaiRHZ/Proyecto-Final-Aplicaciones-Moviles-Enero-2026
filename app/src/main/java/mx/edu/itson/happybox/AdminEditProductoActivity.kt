@@ -12,7 +12,9 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
+import com.cloudinary.android.MediaManager
+import com.cloudinary.android.callback.ErrorInfo
+import com.cloudinary.android.callback.UploadCallback
 import mx.edu.itson.happybox.model.Producto
 import java.util.UUID
 
@@ -30,7 +32,7 @@ class AdminEditProductoActivity : AppCompatActivity() {
     private lateinit var btnSaveProducto: MaterialButton
 
     private lateinit var db: FirebaseFirestore
-    private lateinit var storage: FirebaseStorage
+    // private lateinit var storage: FirebaseStorage
 
     private var productoId: Int = -1
     private var imagenUri: Uri? = null
@@ -49,7 +51,12 @@ class AdminEditProductoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_admin_edit_producto)
 
         db = FirebaseFirestore.getInstance()
-        storage = FirebaseStorage.getInstance()
+        
+        try {
+            MediaManager.init(this, mapOf("cloud_name" to "dluszraa2"))
+        } catch (e: Exception) {
+            // Ya está inicializado
+        }
 
         inicializarVistas()
         
@@ -135,19 +142,22 @@ class AdminEditProductoActivity : AppCompatActivity() {
         btnSaveProducto.text = "Guardando..."
 
         if (imagenUri != null) {
-            val fileName = UUID.randomUUID().toString() + ".jpg"
-            val ref = storage.reference.child("productos_images/$fileName")
-            ref.putFile(imagenUri!!)
-                .addOnSuccessListener {
-                    ref.downloadUrl.addOnSuccessListener { uri ->
-                        guardarEnFirestore(nombre, precio, categoria, descripcion, disponible, stock, uri.toString())
+            MediaManager.get().upload(imagenUri)
+                .unsigned("happybox_preset")
+                .callback(object : UploadCallback {
+                    override fun onStart(requestId: String) {}
+                    override fun onProgress(requestId: String, bytes: Long, totalBytes: Long) {}
+                    override fun onSuccess(requestId: String, resultData: Map<*, *>) {
+                        val url = resultData["secure_url"].toString()
+                        guardarEnFirestore(nombre, precio, categoria, descripcion, disponible, stock, url)
                     }
-                }
-                .addOnFailureListener {
-                    btnSaveProducto.isEnabled = true
-                    btnSaveProducto.text = "Guardar Producto"
-                    Toast.makeText(this, "Error al subir imagen", Toast.LENGTH_SHORT).show()
-                }
+                    override fun onError(requestId: String, error: ErrorInfo) {
+                        btnSaveProducto.isEnabled = true
+                        btnSaveProducto.text = "Guardar Producto"
+                        Toast.makeText(this@AdminEditProductoActivity, "Error al subir imagen: ${error.description}", Toast.LENGTH_SHORT).show()
+                    }
+                    override fun onReschedule(requestId: String, error: ErrorInfo) {}
+                }).dispatch()
         } else {
             guardarEnFirestore(nombre, precio, categoria, descripcion, disponible, stock, currentImageUrl)
         }

@@ -102,6 +102,7 @@ class CarritoFragment : Fragment() {
                     putExtra("productoPrecio",      item.producto.precio)
                     putExtra("productoDescription", item.producto.descripcion)
                     putExtra("productoImagenRes",   item.producto.imagenResId)
+                    putExtra("productoImagenUrl",   item.producto.imagenUrl)
                 }
                 startActivity(intent)
             }

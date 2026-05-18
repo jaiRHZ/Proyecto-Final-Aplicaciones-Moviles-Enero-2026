@@ -48,7 +48,8 @@ dependencies {
     // Firebase
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
-    implementation(libs.firebase.storage)
+    // implementation(libs.firebase.storage)
+    implementation(libs.cloudinary)
 
     // Image loading
     implementation(libs.glide)

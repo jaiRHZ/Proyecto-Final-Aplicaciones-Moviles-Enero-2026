@@ -46,7 +46,12 @@ class ProductoRecyclerAdapter(
         holder.tvCategoria.text = producto.categoria
         holder.tvPrecio.text = String.format("$%.2f MXN", producto.precio)
 
-        if (producto.imagenResId != 0) {
+        if (producto.imagenUrl.isNotEmpty()) {
+            com.bumptech.glide.Glide.with(context)
+                .load(producto.imagenUrl)
+                .placeholder(R.drawable.ic_placeholder_producto)
+                .into(holder.ivImagen)
+        } else if (producto.imagenResId != 0) {
             holder.ivImagen.setImageResource(producto.imagenResId)
         } else {
             holder.ivImagen.setImageResource(R.drawable.ic_placeholder_producto)
